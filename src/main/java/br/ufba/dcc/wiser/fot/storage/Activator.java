@@ -11,11 +11,11 @@ import org.osgi.framework.BundleListener;
 public class Activator implements BundleActivator, BundleListener {
     static BundleContext bc;
     
-    MqttCxfController mc;
+    
     
     public void start(BundleContext bc) throws Exception {
         System.out.println("Starting the bundle FoT Storage");
-        
+        MqttFusekiController mc = new MqttFusekiController("tcp://localhost", "1883", "subscriber", "", "");
         bc.addBundleListener(this);
         
     }
@@ -31,8 +31,5 @@ public class Activator implements BundleActivator, BundleListener {
 		
 	}
 
-	public void setMc(MqttCxfController mc) {
-		this.mc = mc;
-	}
 
 }

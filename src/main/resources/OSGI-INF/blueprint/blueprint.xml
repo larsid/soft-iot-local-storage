@@ -33,10 +33,6 @@
 		<property name="password" value="" />
 	</bean>
 	
-	<bean class="br.ufba.dcc.wiser.fot.storage.Activator" >
-		<property name="mc" ref="busObj" />
-	</bean>
-	
 	<!-- As rotas do contexto do Camel, buscando classes de rotas do camel -->
    <camelContext id="camel" xmlns="http://camel.apache.org/schema/blueprint" >
        <packageScan>

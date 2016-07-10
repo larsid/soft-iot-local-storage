@@ -10,6 +10,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.json.JSONObject;
 
 public class MqttCxfController {
 	
@@ -82,12 +83,15 @@ public class MqttCxfController {
 	
 	public void publishTATURequest(String deviceName, String sensorName){
 		
+		JSONObject jsonMsg = new JSONObject();
+		jsonMsg.put("CODE", "GET");
+		jsonMsg.put("DATA", "INFO");
+		jsonMsg.put("VAR", sensorName);
+		
 		MqttMessage msg = new MqttMessage();
 		String topic = topicPrefix + deviceName;
 		
-		String strMsg = "GET INFO " + sensorName;
-		msg.setPayload(strMsg.getBytes());
-		
+		msg.setPayload(jsonMsg.toString().getBytes());
 		
 		try {
 			
