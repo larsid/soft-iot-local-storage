@@ -732,7 +732,7 @@ Patterns (4) and (5) should be used instead when a constraint or a selection is 
     <owl:DatatypeProperty rdf:about="http://www.loa-cnr.it/ontologies/DUL.owl#hasIntervalDate">
         <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/DUL.owl#hasRegionDataValue"/>
         <rdfs:domain rdf:resource="http://www.loa-cnr.it/ontologies/DUL.owl#TimeInterval"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
         <rdfs:comment>A datatype property that encodes values from xsd:date for a TimeInterval; a same TimeInterval can have more than one xsd:date value: begin date, end date, date at which the interval holds, as well as dates expressed in different formats: xsd:gYear, xsd:dateTime, etc.</rdfs:comment>
         <rdfs:label xml:lang="en">has interval date</rdfs:label>
         <rdfs:label xml:lang="it">intervallo ha data</rdfs:label>
@@ -1284,9 +1284,9 @@ See comments at ObservationValue.</dc:source>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#&apos;MotionSensor&apos; -->
+    <!-- http://purl.org/iot/fiesta-iot#&apos;motionSensor&apos; -->
 
-    <owl:Class rdf:about="http://purl.org/iot/fiesta-iot#&apos;MotionSensor&apos;">
+    <owl:Class rdf:about="http://purl.org/iot/fiesta-iot#&apos;motionSensor&apos;">
         <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
     </owl:Class>
     
@@ -3034,35 +3034,6 @@ See comments at ObservationValue.</dc:source>
     
 
 
-    <!-- http://purl.org/iot/vocab/m3-lite#HumiditySensor -->
-
-    <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#HumiditySensor">
-        <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
-                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Agriculture"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
-                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Environment"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
-                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Weather"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:comment xml:lang="en">Humidity sensor or hygrometer is an instrument used for measuring the moisture concent in the environment.</rdfs:comment>
-        <rdfs:label xml:lang="en">Humidity Sensor</rdfs:label>
-        <rdfs:seeAlso rdf:resource="http://purl.oclc.org/NET/ssnx/meteo/aws#HumiditySensor"/>
-    </owl:Class>
-    
-
-
     <!-- http://purl.org/iot/vocab/m3-lite#Hydrophone -->
 
     <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#Hydrophone">
@@ -3254,35 +3225,6 @@ See comments at ObservationValue.</dc:source>
         </rdfs:subClassOf>
         <rdfs:comment xml:lang="en">Leaf Wetness Sensor is used in agriculture to check whether the plants need to be watered.</rdfs:comment>
         <rdfs:label xml:lang="en">Leaf Wetness Sensor</rdfs:label>
-    </owl:Class>
-    
-
-
-    <!-- http://purl.org/iot/vocab/m3-lite#LightSensor -->
-
-    <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#LightSensor">
-        <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
-                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#BuildingAutomation"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
-                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Transportation"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
-                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Weather"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <txn:hasImage rdf:resource="http://sensormeasurement.appspot.com/images/sensor/light.png"/>
-        <rdfs:comment xml:lang="en">Light/Illuminance Sensor is used in iPhone4 to adjust the brightness of the screen.</rdfs:comment>
-        <rdfs:label xml:lang="en">Light Sensor</rdfs:label>
     </owl:Class>
     
 
@@ -4669,22 +4611,6 @@ See comments at ObservationValue.</dc:source>
     
 
 
-    <!-- http://purl.org/iot/vocab/m3-lite#SoilHumiditySensor -->
-
-    <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#SoilHumiditySensor">
-        <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
-                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Agriculture"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:comment xml:lang="en">Soil Humidity sensor, Soil moisture, Hygrometer are an instrument used for measuring the soil moisture.</rdfs:comment>
-        <rdfs:label xml:lang="en">Soil Humidity Sensor</rdfs:label>
-    </owl:Class>
-    
-
-
     <!-- http://purl.org/iot/vocab/m3-lite#SoilMoistureTension -->
 
     <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#SoilMoistureTension">
@@ -4701,6 +4627,22 @@ See comments at ObservationValue.</dc:source>
         <rdfs:subClassOf rdf:resource="http://purl.org/iot/vocab/m3-lite#Temperature"/>
         <rdfs:comment xml:lang="en">Soil temperature is the bulk temperature of the soil, not the surface (skin) temperature.</rdfs:comment>
         <rdfs:label xml:lang="en">Soil Temperature</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.org/iot/vocab/m3-lite#SoilhumiditySensor -->
+
+    <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#SoilhumiditySensor">
+        <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
+                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Agriculture"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment xml:lang="en">Soil Humidity sensor, Soil moisture, Hygrometer are an instrument used for measuring the soil moisture.</rdfs:comment>
+        <rdfs:label xml:lang="en">Soil Humidity Sensor</rdfs:label>
     </owl:Class>
     
 
@@ -4766,30 +4708,6 @@ See comments at ObservationValue.</dc:source>
     <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#SoundPressureLevelAmbient">
         <rdfs:subClassOf rdf:resource="http://purl.org/iot/vocab/m3-lite#SoundPressureLevel"/>
         <rdfs:label xml:lang="en">Sound Pressure Level Ambient</rdfs:label>
-    </owl:Class>
-    
-
-
-    <!-- http://purl.org/iot/vocab/m3-lite#SoundSensor -->
-
-    <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#SoundSensor">
-        <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
-                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#BuildingAutomation"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
-                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Transportation"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <txn:hasImage rdf:resource="http://sensormeasurement.appspot.com/images/sensor/noise.png"/>
-        <rdfs:comment xml:lang="en">Sound Sensor, Noise level Sensor, Volume sensor, Microphone</rdfs:comment>
-        <rdfs:label xml:lang="en">Sound Sensor</rdfs:label>
-        <rdfs:seeAlso rdf:resource="http://casas.wsu.edu/owl/cose.owl#Microphone"/>
     </owl:Class>
     
 
@@ -5021,7 +4939,7 @@ See comments at ObservationValue.</dc:source>
         <rdfs:comment xml:lang="en">A thermometer to measure the temperature in a room or outside</rdfs:comment>
         <rdfs:label xml:lang="en">Thermometer</rdfs:label>
         <rdfs:seeAlso rdf:resource="http://casas.wsu.edu/owl/cose.owl#TempuratureSensor"/>
-        <rdfs:seeAlso rdf:resource="http://purl.oclc.org/NET/ssnx/meteo/aws#TemperatureSensor"/>
+        <rdfs:seeAlso rdf:resource="http://purl.oclc.org/NET/ssnx/meteo/aws#temperatureSensor"/>
     </owl:Class>
     
 
@@ -5782,6 +5700,88 @@ See comments at ObservationValue.</dc:source>
     
 
 
+    <!-- http://purl.org/iot/vocab/m3-lite#humiditySensor -->
+
+    <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#humiditySensor">
+        <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
+                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Agriculture"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
+                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Environment"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
+                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Weather"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment xml:lang="en">Humidity sensor or hygrometer is an instrument used for measuring the moisture concent in the environment.</rdfs:comment>
+        <rdfs:label xml:lang="en">Humidity Sensor</rdfs:label>
+        <rdfs:seeAlso rdf:resource="http://purl.oclc.org/NET/ssnx/meteo/aws#humiditySensor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.org/iot/vocab/m3-lite#luminositySensor -->
+
+    <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#luminositySensor">
+        <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
+                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#BuildingAutomation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
+                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Transportation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
+                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Weather"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <txn:hasImage rdf:resource="http://sensormeasurement.appspot.com/images/sensor/light.png"/>
+        <rdfs:comment xml:lang="en">Light/Illuminance Sensor is used in iPhone4 to adjust the brightness of the screen.</rdfs:comment>
+        <rdfs:label xml:lang="en">Light Sensor</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.org/iot/vocab/m3-lite#soundSensor -->
+
+    <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#soundSensor">
+        <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
+                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#BuildingAutomation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://purl.org/iot/vocab/m3-lite#domainOfInterest"/>
+                <owl:someValuesFrom rdf:resource="http://purl.org/iot/vocab/m3-lite#Transportation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <txn:hasImage rdf:resource="http://sensormeasurement.appspot.com/images/sensor/noise.png"/>
+        <rdfs:comment xml:lang="en">Sound Sensor, Noise level Sensor, Volume sensor, Microphone</rdfs:comment>
+        <rdfs:label xml:lang="en">Sound Sensor</rdfs:label>
+        <rdfs:seeAlso rdf:resource="http://casas.wsu.edu/owl/cose.owl#Microphone"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.loa-cnr.it/ontologies/DUL.owl#InformationObject -->
 
     <owl:Class rdf:about="http://www.loa-cnr.it/ontologies/DUL.owl#InformationObject">
@@ -5884,544 +5884,548 @@ Situation is also able to represent reified n-ary relations, where isSettingFor 
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01">
         <rdf:type rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#System"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor01"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor02"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor03"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor04"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor05"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_GasSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_HumiditySensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_LightSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_SoundSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01_TemperatureSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor01"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor02"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor03"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor04"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor05"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_gasSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_humiditySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_luminositySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_motionSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_soundSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01_temperatureSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor01 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor01 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor01">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor01">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor02 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor02 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor02">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor02">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino01"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino01"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor03 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor03 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor03">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor04 -->
-
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor04">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor03">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor05 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor04 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_CurrentSensor05">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor04">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_GasSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor05 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_GasSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_currentSensor05">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_gasSensor -->
+
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_gasSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#GasDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_HumiditySensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_humiditySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_HumiditySensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#HumiditySensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_humiditySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#humiditySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_LightSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_luminositySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_LightSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#LightSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_luminositySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#luminositySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_MotionSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_motionSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_MotionSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_motionSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#OccupancyDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_SoundSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_soundSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_SoundSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#SoundSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_soundSensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#soundSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino01_TemperatureSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino01_temperatureSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino01_TemperatureSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino01_temperatureSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#Thermometer"/>
     </owl:NamedIndividual>
     
-    
-    
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02">
+
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02 -->
+
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02">
         <rdf:type rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#System"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor01"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor02"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor03"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor04"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor05"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_GasSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_HumiditySensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_LightSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_SoundSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02_TemperatureSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor01"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor02"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor03"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor04"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor05"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_gasSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_humiditySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_luminositySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_motionSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_soundSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02_temperatureSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor01 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor01 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor01">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor01">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor02 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor02 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor02">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor02">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino02"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino02"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor03 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor03 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor03">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor04 -->
-
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor04">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor03">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor05 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor04 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_CurrentSensor05">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor04">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_GasSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor05 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_GasSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_currentSensor05">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_gasSensor -->
+
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_gasSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#GasDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_HumiditySensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_humiditySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_HumiditySensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#HumiditySensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_humiditySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#humiditySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_LightSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_luminositySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_LightSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#LightSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_luminositySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#luminositySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_MotionSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_motionSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_MotionSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_motionSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#OccupancyDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_SoundSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_soundSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_SoundSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#SoundSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_soundSensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#soundSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino02_TemperatureSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino02_temperatureSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino02_TemperatureSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino02_temperatureSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#Thermometer"/>
     </owl:NamedIndividual>
-
     
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03">
+
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03 -->
+
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03">
         <rdf:type rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#System"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor01"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor02"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor03"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor04"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor05"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_GasSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_HumiditySensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_LightSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_SoundSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03_TemperatureSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor01"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor02"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor03"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor04"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor05"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_gasSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_humiditySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_luminositySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_motionSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_soundSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03_temperatureSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor01 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor01 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor01">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor01">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor02 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor02 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor02">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor02">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino03"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino03"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor03 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor03 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor03">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor04 -->
-
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor04">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor03">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor05 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor04 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_CurrentSensor05">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor04">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_GasSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor05 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_GasSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_currentSensor05">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_gasSensor -->
+
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_gasSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#GasDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_HumiditySensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_humiditySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_HumiditySensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#HumiditySensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_humiditySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#humiditySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_LightSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_luminositySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_LightSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#LightSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_luminositySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#luminositySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_MotionSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_motionSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_MotionSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_motionSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#OccupancyDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_SoundSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_soundSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_SoundSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#SoundSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_soundSensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#soundSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino03_TemperatureSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino03_temperatureSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino03_TemperatureSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino03_temperatureSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#Thermometer"/>
     </owl:NamedIndividual>
     
-    
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04">
+
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04 -->
+
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04">
         <rdf:type rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#System"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor01"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor02"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor03"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor04"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor05"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_GasSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_HumiditySensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_LightSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_SoundSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04_TemperatureSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor01"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor02"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor03"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor04"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor05"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_gasSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_humiditySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_luminositySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_motionSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_soundSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04_temperatureSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor01 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor01 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor01">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor01">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor02 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor02 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor02">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor02">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino04"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino04"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor03 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor03 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor03">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor04 -->
-
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor04">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor03">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor05 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor04 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_CurrentSensor05">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor04">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_GasSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor05 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_GasSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_currentSensor05">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_gasSensor -->
+
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_gasSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#GasDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_HumiditySensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_humiditySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_HumiditySensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#HumiditySensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_humiditySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#humiditySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_LightSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_luminositySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_LightSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#LightSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_luminositySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#luminositySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_MotionSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_motionSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_MotionSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_motionSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#OccupancyDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_SoundSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_soundSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_SoundSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#SoundSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_soundSensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#soundSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino04_TemperatureSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino04_temperatureSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino04_TemperatureSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino04_temperatureSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#Thermometer"/>
     </owl:NamedIndividual>
     
-    
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05">
+
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05 -->
+
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05">
         <rdf:type rdf:resource="http://purl.oclc.org/NET/ssnx/ssn#System"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor01"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor02"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor03"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor04"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor05"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_GasSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_HumiditySensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_LightSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_SoundSensor"/>
-        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05_TemperatureSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor01"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor02"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor03"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor04"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor05"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_gasSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_humiditySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_luminositySensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_motionSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_soundSensor"/>
+        <ssn:hasSubSystem rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05_temperatureSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor01 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor01 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor01">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor01">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor02 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor02 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor02">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor02">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#Ufbaino05"/>
+        <iot-lite:isSubSystemOf rdf:resource="http://purl.org/iot/fiesta-iot#ufbaino05"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor03 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor03 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor03">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor04 -->
-
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor04">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor03">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor05 -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor04 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_CurrentSensor05">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor04">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_GasSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor05 -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_GasSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_currentSensor05">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#EnergyMeter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_gasSensor -->
+
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_gasSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#GasDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_HumiditySensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_humiditySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_HumiditySensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#HumiditySensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_humiditySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#humiditySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_LightSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_luminositySensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_LightSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#LightSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_luminositySensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#luminositySensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_MotionSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_motionSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_MotionSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_motionSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#OccupancyDetector"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_SoundSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_soundSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_SoundSensor">
-        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#SoundSensor"/>
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_soundSensor">
+        <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#soundSensor"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://purl.org/iot/fiesta-iot#Ufbaino05_TemperatureSensor -->
+    <!-- http://purl.org/iot/fiesta-iot#ufbaino05_temperatureSensor -->
 
-    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#Ufbaino05_TemperatureSensor">
+    <owl:NamedIndividual rdf:about="http://purl.org/iot/fiesta-iot#ufbaino05_temperatureSensor">
         <rdf:type rdf:resource="http://purl.org/iot/vocab/m3-lite#Thermometer"/>
     </owl:NamedIndividual>
-
-
-
-    
 </rdf:RDF>
 
 
