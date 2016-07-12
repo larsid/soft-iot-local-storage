@@ -1,5 +1,8 @@
 package br.ufba.dcc.wiser.fot.storage.schema;
 
+import org.apache.jena.ontology.DatatypeProperty;
+import org.apache.jena.ontology.ObjectProperty;
+import org.apache.jena.ontology.OntModel;
 /* CVS $Id: $ */
 import org.apache.jena.rdf.model.*;
  
@@ -9,7 +12,7 @@ import org.apache.jena.rdf.model.*;
  */
 public class SSN {
     /** <p>The RDF model that holds the vocabulary terms</p> */
-    private static Model m_model = ModelFactory.createDefaultModel();
+    private static OntModel m_model = ModelFactory.createOntologyModel();
     
     /** <p>The namespace of the vocabulary as a string</p> */
     public static final String NS = "http://purl.oclc.org/NET/ssnx/ssn#";
@@ -256,5 +259,15 @@ public class SSN {
      *  time in use, number of operations, etc.).</p>
      */
     public static final Resource SystemLifetime = m_model.createResource( "http://purl.oclc.org/NET/ssnx/ssn#SystemLifetime" );
+    
+    
+    public static final ObjectProperty hasValue = m_model.createObjectProperty("http://purl.oclc.org/NET/ssnx/ssn#hasValue");
+    
+    public static final ObjectProperty observationSamplingTime = m_model.createObjectProperty("http://purl.oclc.org/NET/ssnx/ssn#observationSamplingTime");
+    
+    public static final ObjectProperty observationResult = m_model.createObjectProperty("http://purl.oclc.org/NET/ssnx/ssn#observationResult");
+    
+    public static final ObjectProperty madeObservation = m_model.createObjectProperty("http://purl.oclc.org/NET/ssnx/ssn#madeObservation");
+    
     
 }

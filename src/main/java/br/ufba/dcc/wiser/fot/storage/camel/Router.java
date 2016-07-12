@@ -11,7 +11,7 @@ public class Router extends RouteBuilder {
        // visitar http://camel.apache.org/components.html
        // Nesse caso estou pegando dados do método transform e enviando para 
        // o updateInventory como String
-       from ("timer://myTimer?fixedRate=true&period=10000")
+       from ("timer://myTimer?fixedRate=true&period=15000")
                .beanRef("busObj", "getServicesAndBuildMsgs");
    }
 }

@@ -43,7 +43,8 @@ public class MqttCxfController {
 		if(!this.password.isEmpty())
 			connOpt.setPassword(this.password.toCharArray());
 		try {
-			publisher = new MqttClient("tcp://" + this.brokerUrl + ":" + this.brokerPort, this.serverId + "_pub");
+			long unixTime = System.currentTimeMillis() / 1000L;
+			publisher = new MqttClient("tcp://" + this.brokerUrl + ":" + this.brokerPort, this.serverId + "_pub"+ unixTime);
 			publisher.connect(connOpt);
 		} catch (MqttSecurityException e) {
 			// TODO Auto-generated catch block
@@ -83,15 +84,12 @@ public class MqttCxfController {
 	
 	public void publishTATURequest(String deviceName, String sensorName){
 		
-		JSONObject jsonMsg = new JSONObject();
-		jsonMsg.put("CODE", "GET");
-		jsonMsg.put("DATA", "INFO");
-		jsonMsg.put("VAR", sensorName);
+		String msgStr = "GET INFO " + sensorName;
 		
 		MqttMessage msg = new MqttMessage();
 		String topic = topicPrefix + deviceName;
 		
-		msg.setPayload(jsonMsg.toString().getBytes());
+		msg.setPayload(msgStr.getBytes());
 		
 		try {
 			
@@ -99,6 +97,15 @@ public class MqttCxfController {
 		} catch (MqttSecurityException e) {
 			e.printStackTrace();
 		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void destroy(){
+		try {
+			this.publisher.disconnect();
+		} catch (MqttException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
