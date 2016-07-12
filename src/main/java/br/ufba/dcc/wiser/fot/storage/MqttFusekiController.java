@@ -1,35 +1,18 @@
 package br.ufba.dcc.wiser.fot.storage;
 
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
-import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.datatypes.xsd.XSDDateTime;
-import org.apache.jena.ontology.DatatypeProperty;
 import org.apache.jena.ontology.Individual;
-import org.apache.jena.ontology.ObjectProperty;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.DatasetAccessor;
 import org.apache.jena.query.DatasetAccessorFactory;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.update.UpdateExecutionFactory;
-import org.apache.jena.update.UpdateFactory;
-import org.apache.jena.update.UpdateProcessor;
-import org.apache.jena.update.UpdateRequest;
-import org.apache.jena.vocabulary.XSD;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -53,11 +36,6 @@ public class MqttFusekiController implements MqttCallback {
 
 	private static String BASE_URI = "http://example.org/";
 	public static String topic = "dev/#";
-
-	private static final String UPDATE_TEMPLATE = "PREFIX dc: <http://purl.org/dc/elements/1.1/>"
-			+ "INSERT DATA"
-			+ "{ <http://example/%s>    dc:title    \"A new book\" ;"
-			+ "                         dc:creator  \"A.N.Other\" ." + "}   ";
 
 	private String brokerUrl;
 	private String brokerPort;
