@@ -20,19 +20,10 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
-
-
-
-
-
-
-
-
-
 import br.ufba.dcc.wiser.fot.storage.schema.FiestaIoT;
 import br.ufba.dcc.wiser.fot.storage.schema.SSN;
 
-public class MqttFusekiController implements MqttCallback {
+public class MqttFusekiController implements IMqttFusekiController {
 
 	private static String BASE_URI = "http://example.org/";
 	public static String topic = "dev/#";
@@ -44,15 +35,8 @@ public class MqttFusekiController implements MqttCallback {
 	private String password;
 	private MqttClient subscriber;
 
-	public MqttFusekiController(String brokerUrl, String brokerPort,
-			String serverId, String username, String password) {
+	public void init() {
 		MqttConnectOptions connOpt = new MqttConnectOptions();
-
-		this.brokerUrl = brokerUrl;
-		this.brokerPort = brokerPort;
-		this.serverId = serverId;
-		this.username = username;
-		this.password = password;
 
 		try {
 			if (!this.username.isEmpty())
@@ -73,6 +57,7 @@ public class MqttFusekiController implements MqttCallback {
 		}
 	}
 	
+    @Override
 	public void disconnect(){
 		try {
 			this.subscriber.disconnect();
@@ -82,6 +67,7 @@ public class MqttFusekiController implements MqttCallback {
 		}
 	}
 
+    @Override
 	public void connectionLost(Throwable arg0) {
 		MqttConnectOptions connOpt = new MqttConnectOptions();
 		try {
@@ -104,11 +90,13 @@ public class MqttFusekiController implements MqttCallback {
 
 	}
 
+    @Override
 	public void deliveryComplete(IMqttDeliveryToken arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
+    @Override
 	public void messageArrived(String topic, MqttMessage message)
 			throws Exception {		
 		String messageContent = new String(message.getPayload());
