@@ -9,7 +9,7 @@
 	<artifactId>fot-storage</artifactId>
 	<description> FoT Storage Module</description>
 	<groupId>br.ufba.dcc.wiser</groupId>
-	<version>0.1</version>
+	<version>1.0</version>
 	<packaging>bundle</packaging>
 
 	<properties>

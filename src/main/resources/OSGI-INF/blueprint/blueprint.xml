@@ -35,11 +35,10 @@ language governing permissions and limitations under the License. -->
 	
 	<!-- As rotas do contexto do Camel, buscando classes de rotas do camel -->
    <camelContext id="camel" xmlns="http://camel.apache.org/schema/blueprint" >
-       <packageScan>
-           <package>br.ufba.dcc.wiser.fot.storage.camel</package>
-           <excludes>**.*Test*</excludes>
-           <includes>**.*</includes>
-       </packageScan>
+   	   <route>
+            <from uri="timer://myTimer?period={{RequestDataTime}}" />
+            <to uri="bean:busObj?method=getServicesAndBuildMsgs"/>
+        </route>
    </camelContext>
    
    <!-- Lendo documento da pasta /etc, a partir dele voce pode setar variaveis para serem
@@ -56,26 +55,20 @@ language governing permissions and limitations under the License. -->
            <cm:property name="MQTTServerId" value="FoTGatway"/>
            <cm:property name="TripleStoreURI" value="http://localhost:3030/IoTsensorDB/"/>
            <cm:property name="BaseURIForSensorData" value="http://example.org/"/>
+           <cm:property name="RequestDataTime" value="3000"/>
+           
        </cm:default-properties>
    </cm:property-placeholder>	
 	
     <!-- Testando injecao de dependencias -->
-    <bean id="mqttFusekiControllerBean" class="br.ufba.dcc.wiser.fot.storage.MqttFusekiController">
-        <property name="brokerUrl" value="localhost" />
-        <property name="brokerPort" value="1883" />
-        <property name="serverId" value="FoTGatway" />
-        <property name="username" value="" />
-        <property name="password" value="" />
+    <bean id="mqttFusekiControllerBean" class="br.ufba.dcc.wiser.fot.storage.MqttFusekiController" init-method="init" destroy-method="disconnect">
+        <property name="brokerUrl" value="${MQTTHost}" />
+        <property name="brokerPort" value="${MQTTPort}" />
+        <property name="serverId" value="${MQTTServerId}" />
+        <property name="username" value="${MQTTUsername}" />
+        <property name="password" value="${MQTTPassword}" />
+        <property name="fusekiURI" value="${TripleStoreURI}" />
+        <property name="baseURI" value="${BaseURIForSensorData}" />
     </bean>
-
-    <service id="tryUseInjectService" ref="mqttFusekiControllerBean"
-             interface="br.ufba.dcc.wiser.fot.storage.IMqttFusekiController"/>
-   
-    <service id="tryUseInjectServiceExport" ref="mqttFusekiControllerBean" 
-             interface="br.ufba.dcc.wiser.fot.storage.IMqttFusekiController">
-        <service-properties>
-            <entry key="service.exported.interfaces" value="*" />
-        </service-properties>
-    </service>
 
 </blueprint>

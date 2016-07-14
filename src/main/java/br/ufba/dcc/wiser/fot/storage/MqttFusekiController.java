@@ -23,9 +23,8 @@ import org.json.JSONObject;
 import br.ufba.dcc.wiser.fot.storage.schema.FiestaIoT;
 import br.ufba.dcc.wiser.fot.storage.schema.SSN;
 
-public class MqttFusekiController implements IMqttFusekiController {
+public class MqttFusekiController implements MqttCallback {
 
-	private static String BASE_URI = "http://example.org/";
 	public static String topic = "dev/#";
 
 	private String brokerUrl;
@@ -33,6 +32,8 @@ public class MqttFusekiController implements IMqttFusekiController {
 	private String serverId;
 	private String username;
 	private String password;
+	private String fusekiURI;
+	private String baseURI;
 	private MqttClient subscriber;
 
 	public void init() {
@@ -44,7 +45,7 @@ public class MqttFusekiController implements IMqttFusekiController {
 			if (!this.password.isEmpty())
 				connOpt.setPassword(this.password.toCharArray());
 			long unixTime = System.currentTimeMillis() / 1000L;
-			this.subscriber = new MqttClient(this.brokerUrl + ":"
+			this.subscriber = new MqttClient("tcp://" + this.brokerUrl + ":"
 					+ this.brokerPort, this.serverId + unixTime);
 			this.subscriber.setCallback(this);
 			this.subscriber.connect(connOpt);
@@ -66,8 +67,7 @@ public class MqttFusekiController implements IMqttFusekiController {
 		}
 	}
 
-    @Override
-	public void connectionLost(Throwable arg0) {
+    public void connectionLost(Throwable arg0) {
 		MqttConnectOptions connOpt = new MqttConnectOptions();
 		try {
 			if (!this.username.isEmpty())
@@ -89,13 +89,11 @@ public class MqttFusekiController implements IMqttFusekiController {
 
 	}
 
-    @Override
 	public void deliveryComplete(IMqttDeliveryToken arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
-    @Override
 	public void messageArrived(String topic, MqttMessage message)
 			throws Exception {
 		String messageContent = new String(message.getPayload());
@@ -109,12 +107,11 @@ public class MqttFusekiController implements IMqttFusekiController {
 						Model model = buildTriples(json, date);
 						model.write(System.out, "RDF/XML");
 						updateTripleStore(model,
-								"http://localhost:3030/IoTsensorDB/");
+								getFusekiURI());
 					}
 				}).start();
 			}
 		} catch (org.json.JSONException e) {
-			System.out.println(e.getMessage());
 		}
 	}
 
@@ -127,7 +124,7 @@ public class MqttFusekiController implements IMqttFusekiController {
 
 		long unixTime = System.currentTimeMillis() / 1000L;
 
-		Individual observationValue = model.createIndividual(BASE_URI
+		Individual observationValue = model.createIndividual(this.baseURI
 				+ "obsValue" + unixTime, SSN.ObservationValue);
 
 		Literal valueLiteral = model.createTypedLiteral(
@@ -135,11 +132,11 @@ public class MqttFusekiController implements IMqttFusekiController {
 				XSDDatatype.XSDdouble);
 		observationValue.addLiteral(FiestaIoT.hasDataValue, valueLiteral);
 
-		Individual sensorOutput = model.createIndividual(BASE_URI
+		Individual sensorOutput = model.createIndividual(this.baseURI
 				+ "sensorOutput" + unixTime, SSN.SensorOutput);
 		sensorOutput.addProperty(SSN.hasValue, observationValue);
 
-		Individual timeInterval = model.createIndividual(BASE_URI
+		Individual timeInterval = model.createIndividual(this.baseURI
 				+ "timeInterval" + unixTime, FiestaIoT.classTimeInterval);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 		String dateFormated = sdf.format(dateTime);
@@ -147,7 +144,7 @@ public class MqttFusekiController implements IMqttFusekiController {
 				XSDDatatype.XSDdate);
 		timeInterval.addLiteral(FiestaIoT.hasIntervalDate, dateLiteral);
 
-		Individual observation = model.createIndividual(BASE_URI + "obs"
+		Individual observation = model.createIndividual(this.baseURI + "obs"
 				+ unixTime, SSN.Observation);
 		observation.addProperty(SSN.observationSamplingTime, timeInterval);
 		observation.addProperty(SSN.observationResult, sensorOutput);
@@ -159,11 +156,46 @@ public class MqttFusekiController implements IMqttFusekiController {
 	}
 
 	private void updateTripleStore(Model model, String tripleStoreURI) {
-
 		DatasetAccessor accessor = DatasetAccessorFactory
 				.createHTTP(tripleStoreURI);
 		accessor.add(model);
 
+	}
+
+	public void setBrokerUrl(String brokerUrl) {
+		this.brokerUrl = brokerUrl;
+	}
+
+	public void setBrokerPort(String brokerPort) {
+		this.brokerPort = brokerPort;
+	}
+
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setFusekiURI(String fusekiURI) {
+		this.fusekiURI = fusekiURI;
+	}
+
+	public void setBaseURI(String baseURI) {
+		this.baseURI = baseURI;
+	}
+
+	public String getFusekiURI() {
+		return fusekiURI;
+	}
+
+	public String getBaseURI() {
+		return baseURI;
 	}
 
 }
