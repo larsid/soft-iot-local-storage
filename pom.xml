@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>FoT Storage</name>
+	<name>FoT-Storage</name>
 	<artifactId>fot-storage</artifactId>
 	<description> FoT Storage Module</description>
 	<groupId>br.ufba.dcc.wiser</groupId>
