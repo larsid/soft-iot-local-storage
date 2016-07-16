@@ -15,22 +15,22 @@
 
 
     <!-- JENA -->
-    <feature name="jena" version="2">
-        <bundle>mvn:org.apache.jena/jena-osgi/2.13.0</bundle>
-        <feature version="2">jena_osgi_dependencies</feature>
+    <feature name="jena" version="3">
+        <bundle>mvn:org.apache.jena/jena-osgi/3.1.0</bundle>
+        <feature version="3">jena_osgi_dependencies</feature>
         <!-- This is normally exposed by Apache Karaf via root classloader -->
         <!--<feature version="2.11.0">xerces</feature>-->
     </feature>
 
-    <feature name="jena_osgi_dependencies" version="2">
+    <feature name="jena_osgi_dependencies" version="3">
         <bundle>mvn:com.github.andrewoma.dexx/collection/0.6</bundle>
-        <bundle>mvn:com.github.jsonld-java/jsonld-java/0.7.0</bundle>
-        <bundle>mvn:com.fasterxml.jackson.core/jackson-core/2.6.3</bundle>
-        <bundle>mvn:com.fasterxml.jackson.core/jackson-databind/2.6.3</bundle>
-        <bundle>mvn:com.fasterxml.jackson.core/jackson-annotations/2.6.3</bundle>
+        <bundle>mvn:com.github.jsonld-java/jsonld-java/0.8.2</bundle>
+        <bundle>mvn:com.fasterxml.jackson.core/jackson-core/2.7.3</bundle>
+        <bundle>mvn:com.fasterxml.jackson.core/jackson-databind/2.7.3</bundle>
+        <bundle>mvn:com.fasterxml.jackson.core/jackson-annotations/2.7.3</bundle>
         <bundle>mvn:org.apache.httpcomponents/httpcore-osgi/4.4.4</bundle>
         <bundle>mvn:org.apache.httpcomponents/httpclient-osgi/4.5.2</bundle>
-        <bundle>mvn:org.apache.commons/commons-csv/1.0</bundle>
+        <bundle>mvn:org.apache.commons/commons-csv/1.2</bundle>
         <bundle>mvn:org.apache.commons/commons-lang3/3.4</bundle>
         <bundle>mvn:org.apache.thrift/libthrift/0.9.3</bundle>	
     </feature>

@@ -1,10 +1,10 @@
 package br.ufba.dcc.wiser.fot.storage.schema;
 
-import com.hp.hpl.jena.ontology.DatatypeProperty;
-import com.hp.hpl.jena.ontology.ObjectProperty;
-import com.hp.hpl.jena.ontology.OntModel;
+import org.apache.jena.ontology.DatatypeProperty;
+import org.apache.jena.ontology.ObjectProperty;
+import org.apache.jena.ontology.OntModel;
 /* CVS $Id: $ */
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
  
 /**
  * Vocabulary definitions from /home/absinto/Nailton/cloudsemanticwot/pswot-cloud-projects/pswot-cloud-java-jena-schemagenSSN/src/main/resources/ssn.owl 
