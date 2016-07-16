@@ -61,6 +61,7 @@ public class MqttCxfController {
             List<Server> servers = reg.getServers();
             
             for (Server serv : servers) {
+            	Thread.sleep(3000); //to keep ufbaino alive ;)
             	String deviceName;
             	String sensorName;
                 String qname = serv.getEndpoint().getEndpointInfo().getName().getLocalPart();
