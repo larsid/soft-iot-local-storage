@@ -23,8 +23,7 @@ import org.json.JSONObject;
 import br.ufba.dcc.wiser.fot.storage.schema.FiestaIoT;
 import br.ufba.dcc.wiser.fot.storage.schema.SSN;
 
-public class MqttFusekiController implements MqttCallback {
-
+public class MqttSqliteStorageController implements MqttCallback {
 	public static String topic = "dev/#";
 
 	private String brokerUrl;
@@ -198,5 +197,4 @@ public class MqttFusekiController implements MqttCallback {
 	public String getBaseURI() {
 		return baseURI;
 	}
-
 }
