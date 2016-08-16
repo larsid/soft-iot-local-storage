@@ -60,7 +60,8 @@
 		</cm:default-properties>
 	</cm:property-placeholder>
 
-	<!-- Testando injecao de dependencias -->
+<!-- 
+	
 	<bean id="mqttFusekiControllerBean" class="br.ufba.dcc.wiser.fot.storage.MqttFusekiController"
 		init-method="init" destroy-method="disconnect">
 		<property name="brokerUrl" value="${MQTTHost}" />
@@ -72,8 +73,9 @@
 		<property name="baseURI" value="${BaseURIForSensorData}" />
 	</bean>
 	
-	<bean id="mqttSqliteStorageControllerBean" class="br.ufba.dcc.wiser.fot.storage.SqliteStorageController"
-		init-method="init" destroy-method="disconnect">
+-->
+
+	<bean id="MqttH2StorageControllerBean" class="br.ufba.dcc.wiser.fot.storage.MqttH2StorageController" init-method="init" destroy-method="disconnect">
 		<property name="brokerUrl" value="${MQTTHost}" />
 		<property name="brokerPort" value="${MQTTPort}" />
 		<property name="serverId" value="${MQTTServerId}" />
@@ -81,6 +83,7 @@
 		<property name="password" value="${MQTTPassword}" />
 		<property name="fusekiURI" value="${TripleStoreURI}" />
 		<property name="baseURI" value="${BaseURIForSensorData}" />
+		<property name="dataSource" ref="dataSource"/>
 	</bean>
 
 </blueprint>

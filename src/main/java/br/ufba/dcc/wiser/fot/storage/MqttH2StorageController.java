@@ -1,7 +1,13 @@
 package br.ufba.dcc.wiser.fot.storage;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.sql.DataSource;
 
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ontology.Individual;
@@ -18,12 +24,13 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import br.ufba.dcc.wiser.fot.storage.schema.FiestaIoT;
 import br.ufba.dcc.wiser.fot.storage.schema.SSN;
 
-public class MqttSqliteStorageController implements MqttCallback {
+public class MqttH2StorageController implements MqttCallback {
 	public static String topic = "dev/#";
 
 	private String brokerUrl;
@@ -34,6 +41,8 @@ public class MqttSqliteStorageController implements MqttCallback {
 	private String fusekiURI;
 	private String baseURI;
 	private MqttClient subscriber;
+	private DataSource dataSource;
+	private Connection dbConnection;
 
 	public void init() {
 		MqttConnectOptions connOpt = new MqttConnectOptions();
@@ -55,6 +64,22 @@ public class MqttSqliteStorageController implements MqttCallback {
 			e.printStackTrace();
 			System.exit(-1);
 		}
+
+		try {
+			this.dbConnection = this.dataSource.getConnection();
+			Statement stmt = this.dbConnection.createStatement();
+			stmt.execute("drop table sensors_data");
+			DatabaseMetaData dbMeta = this.dbConnection.getMetaData();
+			System.out.println("Using datasource "
+					+ dbMeta.getDatabaseProductName() + ", URL "
+					+ dbMeta.getURL());
+			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID INT PRIMARY KEY, sensor_name VARCHAR(255),"
+					+ " device_name VARCHAR(255), data_value VARCHAR(255), time TIMESTAMP)");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	public void disconnect() {
@@ -93,8 +118,8 @@ public class MqttSqliteStorageController implements MqttCallback {
 
 	}
 
-	public synchronized void messageArrived(String topic, final MqttMessage message)
-			throws Exception {
+	public synchronized void messageArrived(String topic,
+			final MqttMessage message) throws Exception {
 		new Thread(new Runnable() {
 			public void run() {
 				String messageContent = new String(message.getPayload());
@@ -104,9 +129,7 @@ public class MqttSqliteStorageController implements MqttCallback {
 							&& json.getJSONObject("BODY") != null) {
 
 						Date date = new Date();
-						Model model = buildTriples(json, date);
-						model.write(System.out, "RDF/XML");
-						updateTripleStore(model, getFusekiURI());
+						storeLocalData(json, date);
 					}
 				} catch (org.json.JSONException e) {
 				}
@@ -114,52 +137,20 @@ public class MqttSqliteStorageController implements MqttCallback {
 		}).start();
 	}
 
-	private synchronized Model buildTriples(JSONObject json, Date dateTime) {
+	private synchronized void storeLocalData(JSONObject json, Date dateTime) {
 		Model model2 = ModelFactory.createDefaultModel();
 		OntModel model = ModelFactory.createOntologyModel();
-		// "{\"CODE\":\"POST\",\"HEADER\":{\"NAME\":\"ufbaino01\"},\"BODY\":{\"temperatureSensor\":\"27\"}}"
+		/*
+		 * {"CODE":"POST","METHOD":"FLOW","HEADER":{"FLOW":{"publish":60000,"collect":10000},"NAME":"ufbaino01"},
+		 * "BODY":{"temperatureSensor":["28","37","30","28","27","31"]}}
+		 */
 		String sensorName = json.getJSONObject("BODY").keys().next().toString();
-		String sensorFullName = json.getJSONObject("HEADER").getString("NAME")
-				+ "_" + sensorName;
-
-		long unixTime = System.currentTimeMillis() / 1000L;
-
-		Individual observationValue = model.createIndividual(this.baseURI
-				+ "obsValue" + unixTime, SSN.ObservationValue);
-
-		Literal valueLiteral = model.createTypedLiteral(
-				json.getJSONObject("BODY").get(sensorName).toString(),
-				XSDDatatype.XSDdouble);
-		observationValue.addLiteral(FiestaIoT.hasDataValue, valueLiteral);
-
-		Individual sensorOutput = model.createIndividual(this.baseURI
-				+ "sensorOutput" + unixTime, SSN.SensorOutput);
-		sensorOutput.addProperty(SSN.hasValue, observationValue);
-
-		Individual timeInterval = model.createIndividual(this.baseURI
-				+ "timeInterval" + unixTime, FiestaIoT.classTimeInterval);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-		String dateFormated = sdf.format(dateTime);
-		Literal dateLiteral = model.createTypedLiteral(dateFormated,
-				XSDDatatype.XSDdate);
-		timeInterval.addLiteral(FiestaIoT.hasIntervalDate, dateLiteral);
-
-		Individual observation = model.createIndividual(this.baseURI + "obs"
-				+ unixTime, SSN.Observation);
-		observation.addProperty(SSN.observationSamplingTime, timeInterval);
-		observation.addProperty(SSN.observationResult, sensorOutput);
-
-		Resource sensor = model.createResource(SSN.NS + sensorFullName);
-		sensor.addProperty(SSN.madeObservation, observation);
-
-		return model;
-	}
-
-	private synchronized void updateTripleStore(Model model, String tripleStoreURI) {
-		DatasetAccessor accessor = DatasetAccessorFactory
-				.createHTTP(tripleStoreURI);
-		accessor.add(model);
-
+		String deviceName = json.getJSONObject("HEADER").getString("NAME");
+		int collectTime = json.getJSONObject("HEADER").getJSONObject("FLOW").getInt("collect");
+		JSONArray sensorValues = json.getJSONObject("BODY").getJSONArray(sensorName);
+		
+		System.out.println(sensorValues);
+		
 	}
 
 	public void setBrokerUrl(String brokerUrl) {
@@ -196,5 +187,9 @@ public class MqttSqliteStorageController implements MqttCallback {
 
 	public String getBaseURI() {
 		return baseURI;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 }
