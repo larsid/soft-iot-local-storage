@@ -96,7 +96,7 @@ public class MqttCxfController {
 
 	public void publishTATURequest(String deviceName, String sensorName) {
 
-		String msgStr = "GET INFO " + sensorName;
+		String msgStr = "GET " + "INFO" + sensorName;
 
 		MqttMessage msg = new MqttMessage();
 		String topic = topicPrefix + deviceName;
@@ -115,7 +115,7 @@ public class MqttCxfController {
 
 	public void publishTATUFlowRequest(String deviceName, String sensorName, int collect, int publish) {
 
-		String msgStr = "FLOW INFO " + sensorName + " {collect:" + collect + ",publish:" + publish + "}";
+		String msgStr = "FLOW " + "INFO " + sensorName + " {collect:" + collect + ",publish:" + publish + "}";
 
 		MqttMessage msg = new MqttMessage();
 		String topic = topicPrefix + deviceName;

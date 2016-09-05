@@ -2,9 +2,13 @@ package br.ufba.dcc.wiser.fot.storage;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.sql.DataSource;
@@ -27,8 +31,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import br.ufba.dcc.wiser.fot.storage.schema.FiestaIoT;
-import br.ufba.dcc.wiser.fot.storage.schema.SSN;
 
 public class MqttH2StorageController implements MqttCallback {
 	public static String topic = "dev/#";
@@ -68,19 +70,42 @@ public class MqttH2StorageController implements MqttCallback {
 		try {
 			this.dbConnection = this.dataSource.getConnection();
 			Statement stmt = this.dbConnection.createStatement();
-			stmt.execute("drop table sensors_data");
+			//stmt.execute("drop table sensors_data");
 			DatabaseMetaData dbMeta = this.dbConnection.getMetaData();
 			System.out.println("Using datasource "
 					+ dbMeta.getDatabaseProductName() + ", URL "
 					+ dbMeta.getURL());
-			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID INT PRIMARY KEY, sensor_name VARCHAR(255),"
+			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID BIGINT AUTO_INCREMENT PRIMARY KEY, sensor_name VARCHAR(255),"
 					+ " device_name VARCHAR(255), data_value VARCHAR(255), time TIMESTAMP)");
+			
+			ResultSet rs = stmt.executeQuery("select * from sensors_data");
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                writeResult(rs, meta.getColumnCount());
+            }
+            rs = stmt.executeQuery("CALL DISK_SPACE_USED('sensors_data')");
+            meta = rs.getMetaData();
+            while (rs.next()) {
+                writeResult(rs, meta.getColumnCount());
+            }
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
+	
+	public void reload(){
+		System.out.println("OIA!!");
+	}
+	
+	private void writeResult(ResultSet rs, int columnCount) throws SQLException {
+        for (int c = 1; c <= columnCount; c++) {
+            System.out.print(rs.getString(c) + ", ");
+        }
+        System.out.println();
+    }
 
 	public void disconnect() {
 		try {
@@ -138,19 +163,35 @@ public class MqttH2StorageController implements MqttCallback {
 	}
 
 	private synchronized void storeLocalData(JSONObject json, Date dateTime) {
-		Model model2 = ModelFactory.createDefaultModel();
-		OntModel model = ModelFactory.createOntologyModel();
 		/*
-		 * {"CODE":"POST","METHOD":"FLOW","HEADER":{"FLOW":{"publish":60000,"collect":10000},"NAME":"ufbaino01"},
+		 * {"CODE":"POST","METHOD":"FLOW","HEADER":{"FLOW":{"publish":60000,
+		 * "collect":10000},"NAME":"ufbaino01"},
 		 * "BODY":{"temperatureSensor":["28","37","30","28","27","31"]}}
 		 */
 		String sensorName = json.getJSONObject("BODY").keys().next().toString();
 		String deviceName = json.getJSONObject("HEADER").getString("NAME");
-		int collectTime = json.getJSONObject("HEADER").getJSONObject("FLOW").getInt("collect");
-		JSONArray sensorValues = json.getJSONObject("BODY").getJSONArray(sensorName);
-		
-		System.out.println(sensorValues);
-		
+		int collectTime = json.getJSONObject("BODY").getJSONObject("FLOW")
+				.getInt("collect");
+		JSONArray sensorValues = json.getJSONObject("BODY").getJSONArray(
+				sensorName);
+		//building collected date
+		long collectedDate = System.currentTimeMillis();
+		collectedDate = collectedDate - (collectTime * sensorValues.length());
+		Timestamp initialTime = new Timestamp(collectedDate);
+		Calendar date = Calendar.getInstance();
+		date.setTimeInMillis(initialTime.getTime());
+		try {
+			Statement stmt = this.dbConnection.createStatement();
+			for (int i = 0; i < sensorValues.length(); i++) {
+				String value = sensorValues.getString(i);
+				Timestamp timestamp = new Timestamp(date.getTime().getTime());
+				stmt.execute("INSERT INTO sensors_data (sensor_name, device_name, data_value, time) values "
+						+ "('"+ sensorName + "', '" + deviceName +"', '" + value + "' ,'" + timestamp + "')");
+				date.add(Calendar.MILLISECOND, collectTime);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setBrokerUrl(String brokerUrl) {
