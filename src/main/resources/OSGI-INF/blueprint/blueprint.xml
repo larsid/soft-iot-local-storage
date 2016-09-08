@@ -45,15 +45,17 @@
 		para serem usadas em qualquer bundle. Também é definido um valor padrão caso 
 		a propriedade ou o arquivo não exista -->
 
-
+<!-- 
 	<camelContext id="configFileChange"
 		xmlns="http://camel.apache.org/schema/blueprint">
 		<route>
 			<from
-				uri="file://{{karaf.home}}/etc/br.ufba.dcc.wiser.fot.storage.cfg?noop=true&amp;idempotentKey=${file:name}-${file:size};" />
-			<to uri="bean:MqttH2StorageControllerBean?method=reload" />
+				uri="file://{{karaf.home}}/etc?fileName=br.ufba.dcc.wiser.fot.storage.cfg?idempotentKey=${file:name}-${file:modified}" />
+			<to uri="bean:MqttH2StorageControllerBean?method=bla" />
 		</route>
 	</camelContext>
+	
+ -->
 
 	<cm:property-placeholder persistent-id="br.ufba.dcc.wiser.fot.storage"
 		update-strategy="reload">

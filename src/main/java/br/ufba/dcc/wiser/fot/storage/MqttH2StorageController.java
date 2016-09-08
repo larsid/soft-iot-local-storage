@@ -13,15 +13,6 @@ import java.util.Date;
 
 import javax.sql.DataSource;
 
-import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.ontology.Individual;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.query.DatasetAccessor;
-import org.apache.jena.query.DatasetAccessorFactory;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -77,7 +68,7 @@ public class MqttH2StorageController implements MqttCallback {
 					+ dbMeta.getURL());
 			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID BIGINT AUTO_INCREMENT PRIMARY KEY, sensor_name VARCHAR(255),"
 					+ " device_name VARCHAR(255), data_value VARCHAR(255), time TIMESTAMP)");
-			
+			/*
 			ResultSet rs = stmt.executeQuery("select * from sensors_data");
             ResultSetMetaData meta = rs.getMetaData();
             while (rs.next()) {
@@ -87,17 +78,13 @@ public class MqttH2StorageController implements MqttCallback {
             meta = rs.getMetaData();
             while (rs.next()) {
                 writeResult(rs, meta.getColumnCount());
-            }
+            }*/
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-	}
-	
-	public void reload(){
-		System.out.println("OIA!!");
 	}
 	
 	private void writeResult(ResultSet rs, int columnCount) throws SQLException {
