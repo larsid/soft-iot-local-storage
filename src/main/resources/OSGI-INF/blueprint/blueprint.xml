@@ -33,29 +33,22 @@
 		<property name="serverId" value="${MQTTServerId}" />
 		<property name="username" value="${MQTTUsername}" />
 		<property name="password" value="${MQTTPassword}" />
-		<property name="collect" value="${CollectDataTime}" />
+		<property name="collectTemperature" value="${TemperatureSensorCollectDataTime}" />
+		<property name="collectCurrent" value="${CurrentSensor01CollectDataTime}" />
 		<property name="publish" value="${PublishDataTime}" />
 	</bean>
 
-	<!-- As rotas do contexto do Camel, buscando classes de rotas do camel -->
-	<!-- <camelContext id="camel" xmlns="http://camel.apache.org/schema/blueprint"> 
-		<route> <from uri="timer://myTimer?period={{RequestDataTime}}" /> <to uri="bean:busObj?method=getServicesAndBuildMsgs" 
-		/> </route> </camelContext> -->
-	<!-- Lendo documento da pasta /etc, a partir dele voce pode setar variaveis 
-		para serem usadas em qualquer bundle. Também é definido um valor padrão caso 
-		a propriedade ou o arquivo não exista -->
-
-<!-- 
-	<camelContext id="configFileChange"
+	<camelContext id="camel"
 		xmlns="http://camel.apache.org/schema/blueprint">
 		<route>
-			<from
-				uri="file://{{karaf.home}}/etc?fileName=br.ufba.dcc.wiser.fot.storage.cfg?idempotentKey=${file:name}-${file:modified}" />
-			<to uri="bean:MqttH2StorageControllerBean?method=bla" />
+			<from uri="timer://myTimer?period=28800000" /><!-- 8 hours -->
+			<to uri="bean:MqttH2StorageControllerBean?method=cleanOldData" />
 		</route>
 	</camelContext>
-	
- -->
+
+	<!-- <camelContext id="configFileChange" xmlns="http://camel.apache.org/schema/blueprint"> 
+		<route> <from uri="file://{{karaf.home}}/etc?fileName=br.ufba.dcc.wiser.fot.storage.cfg?idempotentKey=${file:name}-${file:modified}" 
+		/> <to uri="bean:MqttH2StorageControllerBean?method=bla" /> </route> </camelContext> -->
 
 	<cm:property-placeholder persistent-id="br.ufba.dcc.wiser.fot.storage"
 		update-strategy="reload">
@@ -69,8 +62,11 @@
 			<cm:property name="TripleStoreURI" value="http://localhost:3030/IoTsensorDB/" />
 			<cm:property name="BaseURIForSensorData" value="http://example.org/" />
 			<cm:property name="RequestDataTime" value="3000" />
-			<cm:property name="CollectDataTime" value="5000" />
-			<cm:property name="PublishDataTime" value="30000" />
+			<cm:property name="TemperatureSensorCollectDataTime"
+				value="30000" />
+			<cm:property name="CurrentSensor01CollectDataTime" value="1000" />
+			<cm:property name="PublishDataTime" value="60000" />
+			<cm:property name="NumberOfDaysDataStored" value="1" />
 		</cm:default-properties>
 	</cm:property-placeholder>
 
@@ -85,6 +81,7 @@
 		<property name="fusekiURI" value="${TripleStoreURI}" />
 		<property name="baseURI" value="${BaseURIForSensorData}" />
 		<property name="dataSource" ref="dataBase" />
+		<property name="numOfDaysDataStored" value="${NumberOfDaysDataStored}" />
 	</bean>
 
 </blueprint>

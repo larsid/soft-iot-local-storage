@@ -21,7 +21,8 @@ public class MqttCxfController {
 	private String serverId;
 	private String username;
 	private String password;
-	private int collect;
+	private int collectTemperature;
+	private int collectCurrent;
 	private int publish;
 	private MqttClient publisher;
 
@@ -79,7 +80,12 @@ public class MqttCxfController {
 					if (serv.getEndpoint().containsKey("sensorName")) {
 						sensorName = serv.getEndpoint().get("sensorName")
 								.toString();
-						publishTATUFlowRequest(deviceName, sensorName, this.collect, this.publish);
+						if(sensorName.contentEquals("temperatureSensor")){
+							publishTATUFlowRequest(deviceName, sensorName, this.collectTemperature, this.publish);
+						}else if(sensorName.contentEquals("currentSensor01")){
+							publishTATUFlowRequest(deviceName, sensorName, this.collectCurrent, this.publish);
+						}
+							
 					} else {
 						System.out.println("ERROR: Service " + qname
 								+ " do not have 'sensorName' property.");
@@ -161,12 +167,16 @@ public class MqttCxfController {
 		this.password = password;
 	}
 
-	public void setCollect(int collect) {
-		this.collect = collect;
-	}
-
 	public void setPublish(int publish) {
 		this.publish = publish;
+	}
+
+	public void setCollectTemperature(int collectTemperature) {
+		this.collectTemperature = collectTemperature;
+	}
+
+	public void setCollectCurrent(int collectCurrent) {
+		this.collectCurrent = collectCurrent;
 	}
 	
 	

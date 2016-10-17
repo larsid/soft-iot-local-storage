@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 import javax.sql.DataSource;
 
@@ -35,7 +36,7 @@ public class MqttH2StorageController implements MqttCallback {
 	private String baseURI;
 	private MqttClient subscriber;
 	private DataSource dataSource;
-	private Connection dbConnection;
+	private String numOfDaysDataStored;
 
 	public void init() {
 		MqttConnectOptions connOpt = new MqttConnectOptions();
@@ -59,27 +60,27 @@ public class MqttH2StorageController implements MqttCallback {
 		}
 
 		try {
-			this.dbConnection = this.dataSource.getConnection();
-			Statement stmt = this.dbConnection.createStatement();
+			Connection dbConnection = this.dataSource.getConnection();
+			Statement stmt = dbConnection.createStatement();
 			//stmt.execute("drop table sensors_data");
-			DatabaseMetaData dbMeta = this.dbConnection.getMetaData();
+			DatabaseMetaData dbMeta = dbConnection.getMetaData();
 			System.out.println("Using datasource "
 					+ dbMeta.getDatabaseProductName() + ", URL "
 					+ dbMeta.getURL());
 			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID BIGINT AUTO_INCREMENT PRIMARY KEY, sensor_name VARCHAR(255),"
 					+ " device_name VARCHAR(255), data_value VARCHAR(255), time TIMESTAMP)");
-			/*
+			
 			ResultSet rs = stmt.executeQuery("select * from sensors_data");
             ResultSetMetaData meta = rs.getMetaData();
             while (rs.next()) {
                 writeResult(rs, meta.getColumnCount());
             }
-            rs = stmt.executeQuery("CALL DISK_SPACE_USED('sensors_data')");
-            meta = rs.getMetaData();
+			rs = stmt.executeQuery("CALL DISK_SPACE_USED('sensors_data')");
+			meta = rs.getMetaData();
             while (rs.next()) {
                 writeResult(rs, meta.getColumnCount());
-            }*/
-			
+            }
+            dbConnection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,41 +145,78 @@ public class MqttH2StorageController implements MqttCallback {
 						storeLocalData(json, date);
 					}
 				} catch (org.json.JSONException e) {
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}).start();
 	}
 
-	private synchronized void storeLocalData(JSONObject json, Date dateTime) {
+	private synchronized void storeLocalData(JSONObject json, Date dateTime) throws SQLException {
 		/*
 		 * {"CODE":"POST","METHOD":"FLOW","HEADER":{"FLOW":{"publish":60000,
 		 * "collect":10000},"NAME":"ufbaino01"},
 		 * "BODY":{"temperatureSensor":["28","37","30","28","27","31"]}}
 		 */
-		String sensorName = json.getJSONObject("BODY").keys().next().toString();
-		String deviceName = json.getJSONObject("HEADER").getString("NAME");
-		int collectTime = json.getJSONObject("BODY").getJSONObject("FLOW")
-				.getInt("collect");
-		JSONArray sensorValues = json.getJSONObject("BODY").getJSONArray(
-				sensorName);
-		//building collected date
-		long collectedDate = System.currentTimeMillis();
-		collectedDate = collectedDate - (collectTime * sensorValues.length());
-		Timestamp initialTime = new Timestamp(collectedDate);
-		Calendar date = Calendar.getInstance();
-		date.setTimeInMillis(initialTime.getTime());
-		try {
-			Statement stmt = this.dbConnection.createStatement();
+		try{
+			Connection dbConn = this.dataSource.getConnection();
+			Iterator<?> keys = json.getJSONObject("BODY").keys();
+			String sensorName = keys.next().toString();
+			while(sensorName.contentEquals("FLOW")){
+				sensorName = keys.next().toString();
+			} 
+			String deviceName = json.getJSONObject("HEADER").getString("NAME");
+			int collectTime = json.getJSONObject("BODY").getJSONObject("FLOW")
+					.getInt("collect");
+			JSONArray sensorValues = json.getJSONObject("BODY").getJSONArray(
+					sensorName);
+			//building collected date
+			long collectedDate = System.currentTimeMillis();
+			collectedDate = collectedDate - (collectTime * sensorValues.length());
+			Timestamp initialTime = new Timestamp(collectedDate);
+			Calendar date = Calendar.getInstance();
+			date.setTimeInMillis(initialTime.getTime());
+			
+			Statement stmt = dbConn.createStatement();
 			for (int i = 0; i < sensorValues.length(); i++) {
 				String value = sensorValues.getString(i);
-				Timestamp timestamp = new Timestamp(date.getTime().getTime());
-				stmt.execute("INSERT INTO sensors_data (sensor_name, device_name, data_value, time) values "
-						+ "('"+ sensorName + "', '" + deviceName +"', '" + value + "' ,'" + timestamp + "')");
-				date.add(Calendar.MILLISECOND, collectTime);
+				if(!value.isEmpty()){
+					Timestamp timestamp = new Timestamp(date.getTime().getTime());
+					stmt.execute("INSERT INTO sensors_data (sensor_name, device_name, data_value, time) values "
+							+ "('"+ sensorName + "', '" + deviceName +"', '" + value + "' ,'" + timestamp + "')");
+					date.add(Calendar.MILLISECOND, collectTime);
+				}
 			}
+			dbConn.close();
+		} catch(org.json.JSONException e){
+			e.printStackTrace();
+			return;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return;
 		}
+	}
+	
+	public void cleanOldData(){
+		System.out.println("clean old data...");
+		
+		Connection dbConn;
+		try {
+			dbConn = this.dataSource.getConnection();
+			Statement stmt = dbConn.createStatement();
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE, (-1)* Integer.parseInt(this.numOfDaysDataStored));
+			Date date = cal.getTime();
+			String strDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+			stmt.execute("DELETE FROM sensors_data WHERE time <= '"+ strDate + "'" );
+			dbConn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	public void setBrokerUrl(String brokerUrl) {
@@ -220,4 +258,10 @@ public class MqttH2StorageController implements MqttCallback {
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+
+	public void setNumOfDaysDataStored(String numOfDaysDataStored) {
+		this.numOfDaysDataStored = numOfDaysDataStored;
+	}
+	
+	
 }
