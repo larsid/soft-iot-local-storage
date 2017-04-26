@@ -60,6 +60,7 @@ public class MqttH2StorageController implements MqttCallback {
 			this.subscriber.setCallback(this);
 			this.subscriber.connect(connOpt);
 			
+			printlnDebug("subscribing in topics:");
 			subscribeDevicesTopics(fotDevices.getListDevices());
 
 		} catch (MqttException e) {
@@ -73,22 +74,24 @@ public class MqttH2StorageController implements MqttCallback {
 			Statement stmt = dbConnection.createStatement();
 			//stmt.execute("drop table sensors_data");
 			DatabaseMetaData dbMeta = dbConnection.getMetaData();
-			System.out.println("Using datasource "
+			printlnDebug("Using datasource "
 					+ dbMeta.getDatabaseProductName() + ", URL "
 					+ dbMeta.getURL());
 			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID BIGINT AUTO_INCREMENT PRIMARY KEY, sensor_id VARCHAR(255),"
 					+ " device_id VARCHAR(255), data_value VARCHAR(255), start_datetime TIMESTAMP, end_datetime TIMESTAMP)");
 			
+			/*
 			ResultSet rs = stmt.executeQuery("SELECT * FROM sensors_data");
             ResultSetMetaData meta = rs.getMetaData();
             while (rs.next()) {
                 writeResult(rs, meta.getColumnCount());
             }
+            
 			rs = stmt.executeQuery("CALL DISK_SPACE_USED('sensors_data')");
 			meta = rs.getMetaData();
             while (rs.next()) {
                 writeResult(rs, meta.getColumnCount());
-            }
+            }*/
             dbConnection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -99,6 +102,7 @@ public class MqttH2StorageController implements MqttCallback {
 	
 	private void subscribeDevicesTopics(List<Device> devices) throws MqttException{
 		for(Device device : devices){
+			printlnDebug(TATUWrapper.topicBase + device.getId() + "/#");
 			this.subscriber.subscribe(TATUWrapper.topicBase + device.getId() + "/#", 1);
 		}
 	}
@@ -120,6 +124,7 @@ public class MqttH2StorageController implements MqttCallback {
 	}
 
 	public void connectionLost(Throwable arg0) {
+		printlnDebug("connectionLost...trying to reconnect...");
 		MqttConnectOptions connOpt = new MqttConnectOptions();
 		try {
 			if (!this.username.isEmpty())
@@ -161,6 +166,7 @@ public class MqttH2StorageController implements MqttCallback {
 					sensor.setDevice(device);
 					Date date = new Date();
 					List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(messageContent,sensor,date);
+					printlnDebug("answer received: sensor: " + sensor.getId() + " - number of data sensor: " + listSensorData.size());
 					storeSensorData(listSensorData);
 				}
 			}
@@ -176,9 +182,13 @@ public class MqttH2StorageController implements MqttCallback {
 				String deviceId = sensorData.getSensor().getDevice().getId();
 				Timestamp startDateTime = new Timestamp(sensorData.getStartTime().getTime());
 				Timestamp endDateTime = new Timestamp(sensorData.getEndTime().getTime());
-				stmt.execute("INSERT INTO sensors_data (sensor_id, device_id, data_value, start_datetime, end_datetime) values "
+				boolean result = stmt.execute("INSERT INTO sensors_data (sensor_id, device_id, data_value, start_datetime, end_datetime) values "
 						+ "('"+ sensorId + "', '" + deviceId +"', '" + sensorData.getValue() + "' ,'" + startDateTime
 						+ "', '" + endDateTime + "')");
+				if(!result){
+					printlnDebug("cannot insert data:" + "('"+ sensorId + "', '" + deviceId +"', '" + sensorData.getValue() + "' ,'" + startDateTime
+							+ "', '" + endDateTime + "')");
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -186,8 +196,7 @@ public class MqttH2StorageController implements MqttCallback {
 	}
 	
 	public void cleanOldData(){
-		System.out.println("clean old data...");
-		
+		printlnDebug("clean old data...");
 		Connection dbConn;
 		try {
 			dbConn = this.dataSource.getConnection();
@@ -202,6 +211,11 @@ public class MqttH2StorageController implements MqttCallback {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private void printlnDebug(String str){
+		if (debugModeValue)
+			System.out.println(str);
 	}
 
 	public void setBrokerUrl(String brokerUrl) {

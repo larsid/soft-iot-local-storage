@@ -41,6 +41,7 @@ public class MqttCxfController {
 			publisher = new MqttClient("tcp://" + this.brokerUrl + ":"
 					+ this.brokerPort, this.serverId + "_pub" + unixTime);
 			publisher.connect(connOpt);
+			printlnDebug("Sending FLOW messages:");
 			sendFlowRequestBySensorDevice();
 		} catch (MqttSecurityException e) {
 			// TODO Auto-generated catch block
@@ -62,6 +63,7 @@ public class MqttCxfController {
 				}else{
 					flowRequest = TATUWrapper.getTATUFlow(sensor.getId(), sensor.getCollection_time(), sensor.getPublishing_time());
 				}
+				printlnDebug("[topic: " + device.getId() +"] " + flowRequest);
 				publishTATUMessage(flowRequest, device.getId());
 			}
 			
@@ -89,6 +91,11 @@ public class MqttCxfController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private void printlnDebug(String str){
+		if (debugModeValue)
+			System.out.println(str);
 	}
 
 	public void setBrokerUrl(String brokerUrl) {
