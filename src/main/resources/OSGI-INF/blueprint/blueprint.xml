@@ -19,38 +19,47 @@
  http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
  http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
 
-	<reference-list id="busList" interface="org.apache.cxf.Bus"
-		filter="(cxf.bus.id=*)" availability="optional" />
-
 	<reference id="dataBase" interface="javax.sql.DataSource"
 		availability="optional" filter="(dataSourceName=fot-gateway-local-storage)" />
 
-	<bean id="busObj" class="br.ufba.dcc.wiser.fot.storage.MqttCxfController"
+	<reference id="connectedDevices" interface="br.ufba.dcc.wiser.soft_iot.mapping_devices.Controller"
+		availability="optional" />
+
+	<bean id="busObj" class="br.ufba.dcc.wiser.soft_iot.local_storage.MqttCxfController"
 		init-method="init" destroy-method="destroy">
-		<property name="busList" ref="busList" />
 		<property name="brokerUrl" value="${MQTTHost}" />
 		<property name="brokerPort" value="${MQTTPort}" />
 		<property name="serverId" value="${MQTTServerId}" />
 		<property name="username" value="${MQTTUsername}" />
 		<property name="password" value="${MQTTPassword}" />
-		<property name="collectTemperature" value="${TemperatureSensorCollectDataTime}" />
-		<property name="collectCurrent" value="${CurrentSensor01CollectDataTime}" />
-		<property name="publish" value="${PublishDataTime}" />
+		<property name="defaultCollectionTime" value="${DefaultCollectionTimeSensorData}" />
+		<property name="defaultPublishingTime" value="${DefaultPublishingTimeSensorData}" />
+		<property name="fotDevices" ref="connectedDevices" />
+		<property name="debugModeValue" value="${debugMode}" />
+	</bean>
+	
+	<bean id="MqttH2StorageControllerBean" class="br.ufba.dcc.wiser.soft_iot.local_storage.MqttH2StorageController"
+		init-method="init" destroy-method="disconnect">
+		<property name="brokerUrl" value="${MQTTHost}" />
+		<property name="brokerPort" value="${MQTTPort}" />
+		<property name="serverId" value="${MQTTServerId}" />
+		<property name="username" value="${MQTTUsername}" />
+		<property name="password" value="${MQTTPassword}" />
+		<property name="dataSource" ref="dataBase" />
+		<property name="numOfHoursDataStored" value="${NumberOfHoursDataStored}" />
+		<property name="fotDevices" ref="connectedDevices" />
+		<property name="debugModeValue" value="${debugMode}" />
 	</bean>
 
 	<camelContext id="camel"
 		xmlns="http://camel.apache.org/schema/blueprint">
 		<route>
-			<from uri="timer://myTimer?period=28800000" /><!-- 8 hours -->
+			<from uri="timer://myTimer?period={{NumberOfHoursDataStored}}h" /><!-- 8 hours -->
 			<to uri="bean:MqttH2StorageControllerBean?method=cleanOldData" />
 		</route>
 	</camelContext>
 
-	<!-- <camelContext id="configFileChange" xmlns="http://camel.apache.org/schema/blueprint"> 
-		<route> <from uri="file://{{karaf.home}}/etc?fileName=br.ufba.dcc.wiser.fot.storage.cfg?idempotentKey=${file:name}-${file:modified}" 
-		/> <to uri="bean:MqttH2StorageControllerBean?method=bla" /> </route> </camelContext> -->
-
-	<cm:property-placeholder persistent-id="br.ufba.dcc.wiser.fot.storage"
+	<cm:property-placeholder persistent-id="br.ufba.dcc.wiser.soft_iot.local_storage"
 		update-strategy="reload">
 		<cm:default-properties>
 			<cm:property name="MQTTHost" value="localhost" />
@@ -58,30 +67,12 @@
 			<cm:property name="MQTTUsername" value="" />
 			<cm:property name="MQTTPassword" value="" />
 			<cm:property name="MQTTServerId" value="FoTGatway" />
-			<cm:property name="MQTTServerId" value="FoTGatway" />
-			<cm:property name="TripleStoreURI" value="http://localhost:3030/IoTsensorDB/" />
-			<cm:property name="BaseURIForSensorData" value="http://example.org/" />
-			<cm:property name="RequestDataTime" value="3000" />
-			<cm:property name="TemperatureSensorCollectDataTime"
+			<cm:property name="DefaultCollectionTimeSensorData" value="3000" />
+			<cm:property name="DefaultPublishingTimeSensorData"
 				value="30000" />
-			<cm:property name="CurrentSensor01CollectDataTime" value="1000" />
-			<cm:property name="PublishDataTime" value="60000" />
-			<cm:property name="NumberOfDaysDataStored" value="1" />
+			<cm:property name="NumberOfHoursDataStored" value="24" />
+			<cm:property name="debugMode" value="false" />
 		</cm:default-properties>
 	</cm:property-placeholder>
-
-
-	<bean id="MqttH2StorageControllerBean" class="br.ufba.dcc.wiser.fot.storage.MqttH2StorageController"
-		init-method="init" destroy-method="disconnect">
-		<property name="brokerUrl" value="${MQTTHost}" />
-		<property name="brokerPort" value="${MQTTPort}" />
-		<property name="serverId" value="${MQTTServerId}" />
-		<property name="username" value="${MQTTUsername}" />
-		<property name="password" value="${MQTTPassword}" />
-		<property name="fusekiURI" value="${TripleStoreURI}" />
-		<property name="baseURI" value="${BaseURIForSensorData}" />
-		<property name="dataSource" ref="dataBase" />
-		<property name="numOfDaysDataStored" value="${NumberOfDaysDataStored}" />
-	</bean>
 
 </blueprint>

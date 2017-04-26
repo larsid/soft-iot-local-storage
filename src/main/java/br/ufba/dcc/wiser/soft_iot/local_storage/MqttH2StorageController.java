@@ -1,4 +1,4 @@
-package br.ufba.dcc.wiser.fot.storage;
+package br.ufba.dcc.wiser.soft_iot.local_storage;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -23,9 +24,14 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import br.ufba.dcc.wiser.soft_iot.entities.Device;
+import br.ufba.dcc.wiser.soft_iot.entities.Sensor;
+import br.ufba.dcc.wiser.soft_iot.entities.SensorData;
+import br.ufba.dcc.wiser.soft_iot.mapping_devices.Controller;
+import br.ufba.dcc.wiser.soft_iot.tatu.TATUWrapper;
+
 
 public class MqttH2StorageController implements MqttCallback {
-	public static String topic = "dev/#";
 
 	private String brokerUrl;
 	private String brokerPort;
@@ -36,7 +42,9 @@ public class MqttH2StorageController implements MqttCallback {
 	private String baseURI;
 	private MqttClient subscriber;
 	private DataSource dataSource;
-	private String numOfDaysDataStored;
+	private String numOfHoursDataStored;
+	private Controller fotDevices;
+	private boolean debugModeValue;
 
 	public void init() {
 		MqttConnectOptions connOpt = new MqttConnectOptions();
@@ -51,7 +59,8 @@ public class MqttH2StorageController implements MqttCallback {
 					+ this.brokerPort, this.serverId + unixTime);
 			this.subscriber.setCallback(this);
 			this.subscriber.connect(connOpt);
-			this.subscriber.subscribe(topic, 1);
+			
+			subscribeDevicesTopics(fotDevices.getListDevices());
 
 		} catch (MqttException e) {
 			// TODO Auto-generated catch block
@@ -67,10 +76,10 @@ public class MqttH2StorageController implements MqttCallback {
 			System.out.println("Using datasource "
 					+ dbMeta.getDatabaseProductName() + ", URL "
 					+ dbMeta.getURL());
-			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID BIGINT AUTO_INCREMENT PRIMARY KEY, sensor_name VARCHAR(255),"
-					+ " device_name VARCHAR(255), data_value VARCHAR(255), time TIMESTAMP)");
+			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID BIGINT AUTO_INCREMENT PRIMARY KEY, sensor_id VARCHAR(255),"
+					+ " device_id VARCHAR(255), data_value VARCHAR(255), start_datetime TIMESTAMP, end_datetime TIMESTAMP)");
 			
-			ResultSet rs = stmt.executeQuery("select * from sensors_data");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM sensors_data");
             ResultSetMetaData meta = rs.getMetaData();
             while (rs.next()) {
                 writeResult(rs, meta.getColumnCount());
@@ -86,6 +95,12 @@ public class MqttH2StorageController implements MqttCallback {
 			e.printStackTrace();
 		}
 
+	}
+	
+	private void subscribeDevicesTopics(List<Device> devices) throws MqttException{
+		for(Device device : devices){
+			this.subscriber.subscribe(TATUWrapper.topicBase + device.getId() + "/#", 1);
+		}
 	}
 	
 	private void writeResult(ResultSet rs, int columnCount) throws SQLException {
@@ -116,7 +131,7 @@ public class MqttH2StorageController implements MqttCallback {
 					+ this.brokerPort, this.serverId + unixTime);
 			this.subscriber.setCallback(this);
 			this.subscriber.connect(connOpt);
-			this.subscriber.subscribe(topic, 1);
+			subscribeDevicesTopics(fotDevices.getListDevices());
 
 		} catch (MqttException e) {
 			// TODO Auto-generated catch block
@@ -136,66 +151,38 @@ public class MqttH2StorageController implements MqttCallback {
 		new Thread(new Runnable() {
 			public void run() {
 				String messageContent = new String(message.getPayload());
-				try {
-					JSONObject json = new JSONObject(messageContent);
-					if ((json.get("CODE").toString().contentEquals("POST"))
-							&& json.getJSONObject("BODY") != null) {
-
-						Date date = new Date();
-						storeLocalData(json, date);
-					}
-				} catch (org.json.JSONException e) {
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(TATUWrapper.isValidTATUAnswer(messageContent)){
+					
+					String deviceId = TATUWrapper.getDeviceIdByTATUAnswer(messageContent);
+					Device device = fotDevices.getDeviceById(deviceId);
+					
+					String sensorId = TATUWrapper.getSensorIdByTATUAnswer(messageContent);
+					Sensor sensor = device.getSensorbySensorId(sensorId);
+					sensor.setDevice(device);
+					Date date = new Date();
+					List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(messageContent,sensor,date);
+					storeSensorData(listSensorData);
 				}
 			}
 		}).start();
 	}
-
-	private synchronized void storeLocalData(JSONObject json, Date dateTime) throws SQLException {
-		/*
-		 * {"CODE":"POST","METHOD":"FLOW","HEADER":{"FLOW":{"publish":60000,
-		 * "collect":10000},"NAME":"ufbaino01"},
-		 * "BODY":{"temperatureSensor":["28","37","30","28","27","31"]}}
-		 */
-		try{
+	
+	private void storeSensorData(List<SensorData> listSensorData){
+		try {
 			Connection dbConn = this.dataSource.getConnection();
-			Iterator<?> keys = json.getJSONObject("BODY").keys();
-			String sensorName = keys.next().toString();
-			while(sensorName.contentEquals("FLOW")){
-				sensorName = keys.next().toString();
-			} 
-			String deviceName = json.getJSONObject("HEADER").getString("NAME");
-			int collectTime = json.getJSONObject("BODY").getJSONObject("FLOW")
-					.getInt("collect");
-			JSONArray sensorValues = json.getJSONObject("BODY").getJSONArray(
-					sensorName);
-			//building collected date
-			long collectedDate = System.currentTimeMillis();
-			collectedDate = collectedDate - (collectTime * sensorValues.length());
-			Timestamp initialTime = new Timestamp(collectedDate);
-			Calendar date = Calendar.getInstance();
-			date.setTimeInMillis(initialTime.getTime());
-			
 			Statement stmt = dbConn.createStatement();
-			for (int i = 0; i < sensorValues.length(); i++) {
-				String value = sensorValues.getString(i);
-				if(!value.isEmpty()){
-					Timestamp timestamp = new Timestamp(date.getTime().getTime());
-					stmt.execute("INSERT INTO sensors_data (sensor_name, device_name, data_value, time) values "
-							+ "('"+ sensorName + "', '" + deviceName +"', '" + value + "' ,'" + timestamp + "')");
-					date.add(Calendar.MILLISECOND, collectTime);
-				}
+			for(SensorData sensorData : listSensorData){
+				String sensorId = sensorData.getSensor().getId();
+				String deviceId = sensorData.getSensor().getDevice().getId();
+				Timestamp startDateTime = new Timestamp(sensorData.getStartTime().getTime());
+				Timestamp endDateTime = new Timestamp(sensorData.getEndTime().getTime());
+				stmt.execute("INSERT INTO sensors_data (sensor_id, device_id, data_value, start_datetime, end_datetime) values "
+						+ "('"+ sensorId + "', '" + deviceId +"', '" + sensorData.getValue() + "' ,'" + startDateTime
+						+ "', '" + endDateTime + "')");
 			}
-			dbConn.close();
-		} catch(org.json.JSONException e){
-			e.printStackTrace();
-			return;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return;
-		}
+		}	
 	}
 	
 	public void cleanOldData(){
@@ -206,17 +193,15 @@ public class MqttH2StorageController implements MqttCallback {
 			dbConn = this.dataSource.getConnection();
 			Statement stmt = dbConn.createStatement();
 			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.DATE, (-1)* Integer.parseInt(this.numOfDaysDataStored));
+			cal.add(Calendar.HOUR, (-1)* Integer.parseInt(this.numOfHoursDataStored));
 			Date date = cal.getTime();
 			String strDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
-			stmt.execute("DELETE FROM sensors_data WHERE time <= '"+ strDate + "'" );
+			stmt.execute("DELETE FROM sensors_data WHERE end_datetime <= '"+ strDate + "'" );
 			dbConn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
 
 	public void setBrokerUrl(String brokerUrl) {
@@ -259,9 +244,16 @@ public class MqttH2StorageController implements MqttCallback {
 		this.dataSource = dataSource;
 	}
 
-	public void setNumOfDaysDataStored(String numOfDaysDataStored) {
-		this.numOfDaysDataStored = numOfDaysDataStored;
+	public void setnumOfHoursDataStored(String numOfHoursDataStored) {
+		this.numOfHoursDataStored = numOfHoursDataStored;
+	}
+
+	public void setFotDevices(Controller fotDevices) {
+		this.fotDevices = fotDevices;
 	}
 	
+	public void setDebugModeValue(boolean debugModeValue) {
+		this.debugModeValue = debugModeValue;
+	}
 	
 }
