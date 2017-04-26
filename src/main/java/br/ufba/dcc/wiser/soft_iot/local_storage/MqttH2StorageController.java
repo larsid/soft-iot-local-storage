@@ -166,7 +166,7 @@ public class MqttH2StorageController implements MqttCallback {
 					sensor.setDevice(device);
 					Date date = new Date();
 					List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(messageContent,sensor,date);
-					printlnDebug("answer received: sensor: " + sensor.getId() + " - number of data sensor: " + listSensorData.size());
+					printlnDebug("answer received: device: " + deviceId +  " - sensor: " + sensor.getId() + " - number of data sensors: " + listSensorData.size());
 					storeSensorData(listSensorData);
 				}
 			}
@@ -185,7 +185,7 @@ public class MqttH2StorageController implements MqttCallback {
 				boolean result = stmt.execute("INSERT INTO sensors_data (sensor_id, device_id, data_value, start_datetime, end_datetime) values "
 						+ "('"+ sensorId + "', '" + deviceId +"', '" + sensorData.getValue() + "' ,'" + startDateTime
 						+ "', '" + endDateTime + "')");
-				if(!result){
+				if(result){
 					printlnDebug("cannot insert data:" + "('"+ sensorId + "', '" + deviceId +"', '" + sensorData.getValue() + "' ,'" + startDateTime
 							+ "', '" + endDateTime + "')");
 				}

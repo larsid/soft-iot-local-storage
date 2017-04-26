@@ -14,7 +14,7 @@ import br.ufba.dcc.wiser.soft_iot.entities.Sensor;
 import br.ufba.dcc.wiser.soft_iot.mapping_devices.Controller;
 import br.ufba.dcc.wiser.soft_iot.tatu.TATUWrapper;
 
-public class MqttCxfController {
+public class MqttPublisherController {
 
 	private String brokerUrl;
 	private String brokerPort;
@@ -27,7 +27,7 @@ public class MqttCxfController {
 	private Controller fotDevices;
 	private boolean debugModeValue;
 
-	public MqttCxfController() {
+	public MqttPublisherController() {
 	}
 
 	public void init() {

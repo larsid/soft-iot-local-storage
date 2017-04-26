@@ -25,7 +25,7 @@
 	<reference id="connectedDevices" interface="br.ufba.dcc.wiser.soft_iot.mapping_devices.Controller"
 		availability="optional" />
 
-	<bean id="busObj" class="br.ufba.dcc.wiser.soft_iot.local_storage.MqttCxfController"
+	<bean id="busObj" class="br.ufba.dcc.wiser.soft_iot.local_storage.MqttPublisherController"
 		init-method="init" destroy-method="destroy">
 		<property name="brokerUrl" value="${MQTTHost}" />
 		<property name="brokerPort" value="${MQTTPort}" />
