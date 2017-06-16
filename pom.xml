@@ -28,7 +28,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>br.ufba.dcc.wiser.fot.storage</Export-Package>
+						<Export-Package>br.ufba.dcc.wiser.soft_iot.local_storage</Export-Package>
 						<Embed-Dependency>mqtt-client;scope=compile|runtimeinline=false</Embed-Dependency>
 						<Embed-Directory>target/dependency</Embed-Directory>
 						<Embed-StripGroup>true</Embed-StripGroup>
@@ -109,11 +109,6 @@
 			<artifactId>json</artifactId>
 			<version>20140107</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-core</artifactId>
-			<version>3.1.4</version>
-		</dependency>
 		<!--Camel -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -140,6 +135,12 @@
 			<artifactId>org.osgi.compendium</artifactId>
 			<version>4.2.0</version>
 			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.specs</groupId>
+			<artifactId>org.apache.servicemix.specs.jaxb-api-2.1</artifactId>
+			<version>2.5.0</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

@@ -80,13 +80,13 @@ public class MqttH2StorageController implements MqttCallback {
 			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID BIGINT AUTO_INCREMENT PRIMARY KEY, sensor_id VARCHAR(255),"
 					+ " device_id VARCHAR(255), data_value VARCHAR(255), start_datetime TIMESTAMP, end_datetime TIMESTAMP)");
 			
-			/*
+			
 			ResultSet rs = stmt.executeQuery("SELECT * FROM sensors_data");
             ResultSetMetaData meta = rs.getMetaData();
             while (rs.next()) {
                 writeResult(rs, meta.getColumnCount());
             }
-            
+            /*
 			rs = stmt.executeQuery("CALL DISK_SPACE_USED('sensors_data')");
 			meta = rs.getMetaData();
             while (rs.next()) {
@@ -163,36 +163,36 @@ public class MqttH2StorageController implements MqttCallback {
 					
 					String sensorId = TATUWrapper.getSensorIdByTATUAnswer(messageContent);
 					Sensor sensor = device.getSensorbySensorId(sensorId);
-					sensor.setDevice(device);
 					Date date = new Date();
-					List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(messageContent,sensor,date);
-					printlnDebug("answer received: device: " + deviceId +  " - sensor: " + sensor.getId() + " - number of data sensors: " + listSensorData.size());
-					storeSensorData(listSensorData);
+					List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(messageContent,device,sensor,date);
+					printlnDebug("answer received: device: " + deviceId +  " - sensor: " + sensor.getId() + " - number of data sensor: " + listSensorData.size());
+					storeSensorData(listSensorData, device);
 				}
 			}
 		}).start();
 	}
 	
-	private void storeSensorData(List<SensorData> listSensorData){
+	private void storeSensorData(List<SensorData> listSensorData, Device device){
 		try {
 			Connection dbConn = this.dataSource.getConnection();
 			Statement stmt = dbConn.createStatement();
 			for(SensorData sensorData : listSensorData){
 				String sensorId = sensorData.getSensor().getId();
-				String deviceId = sensorData.getSensor().getDevice().getId();
 				Timestamp startDateTime = new Timestamp(sensorData.getStartTime().getTime());
 				Timestamp endDateTime = new Timestamp(sensorData.getEndTime().getTime());
 				boolean result = stmt.execute("INSERT INTO sensors_data (sensor_id, device_id, data_value, start_datetime, end_datetime) values "
-						+ "('"+ sensorId + "', '" + deviceId +"', '" + sensorData.getValue() + "' ,'" + startDateTime
+						+ "('"+ sensorId + "', '" + device.getId() +"', '" + sensorData.getValue() + "' ,'" + startDateTime
 						+ "', '" + endDateTime + "')");
 				if(result){
-					printlnDebug("cannot insert data:" + "('"+ sensorId + "', '" + deviceId +"', '" + sensorData.getValue() + "' ,'" + startDateTime
+					printlnDebug("cannot insert data:" + "('"+ sensorId + "', '" + device.getId() +"', '" + sensorData.getValue() + "' ,'" + startDateTime
 							+ "', '" + endDateTime + "')");
 				}
 			}
+			dbConn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}	
+		}
+		
 	}
 	
 	public void cleanOldData(){

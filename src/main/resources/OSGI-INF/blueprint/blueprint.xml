@@ -50,6 +50,14 @@
 		<property name="fotDevices" ref="connectedDevices" />
 		<property name="debugModeValue" value="${debugMode}" />
 	</bean>
+	
+	<bean id="LocalDataControllerBean" class="br.ufba.dcc.wiser.soft_iot.local_storage.LocalDataControllerImpl">
+		<property name="dataSource" ref="dataBase" />
+		<property name="debugModeValue" value="${debugMode}" />
+	</bean>
+	
+	<service id="serviceLocalDataController" ref="LocalDataControllerBean"
+		interface="br.ufba.dcc.wiser.soft_iot.local_storage.LocalDataController" />
 
 	<camelContext id="camel"
 		xmlns="http://camel.apache.org/schema/blueprint">
