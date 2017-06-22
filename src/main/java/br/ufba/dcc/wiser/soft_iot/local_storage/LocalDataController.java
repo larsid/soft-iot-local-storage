@@ -12,5 +12,13 @@ public interface LocalDataController {
 	SensorData getLastSensorData(Device device, Sensor sensor);
 	
 	List<SensorData> getSensorDataByDateTime(Device device, Sensor sensor, Date startDateTime, Date endDateTime);
+	
+	List<SensorData> getSensorDataByLastDateTime(Device device, Sensor sensor, Date lastDateTime);
+	
+	void createFirstLastSensorDataEnriched(Device device, Sensor sensor, Date lastDateTime);
+	
+	void updateLastSensorDataEnriched(Device device, Sensor sensor, Date lastDateTime);
+	
+	Date getLastDateOfEnrichedSensorData(Device device, Sensor sensor);
 
 }
