@@ -72,24 +72,27 @@ public class MqttH2StorageController implements MqttCallback {
 		try {
 			Connection dbConnection = this.dataSource.getConnection();
 			Statement stmt = dbConnection.createStatement();
-			//stmt.execute("drop table sensors_data");
+			//stmt.execute("drop table sensor_data");
 			DatabaseMetaData dbMeta = dbConnection.getMetaData();
 			printlnDebug("Using datasource "
 					+ dbMeta.getDatabaseProductName() + ", URL "
 					+ dbMeta.getURL());
-			stmt.execute("CREATE TABLE IF NOT EXISTS sensors_data(ID BIGINT AUTO_INCREMENT PRIMARY KEY, sensor_id VARCHAR(255),"
-					+ " device_id VARCHAR(255), data_value VARCHAR(255), start_datetime TIMESTAMP, end_datetime TIMESTAMP)");
+			stmt.execute("CREATE TABLE IF NOT EXISTS sensor_data(ID BIGINT AUTO_INCREMENT PRIMARY KEY, sensor_id VARCHAR(255),"
+					+ " device_id VARCHAR(255), data_value VARCHAR(255), start_datetime TIMESTAMP, end_datetime TIMESTAMP, aggregation_status INT DEFAULT 0)");
 			
 			stmt.execute("CREATE TABLE IF NOT EXISTS semantic_registered_last_time_sensors(sensor_id VARCHAR(255),"
 					+ " device_id VARCHAR(255), last_time TIMESTAMP)");
 			
-			ResultSet rs = stmt.executeQuery("SELECT * FROM sensors_data");
+			stmt.execute("CREATE TABLE IF NOT EXISTS aggregation_registered_last_time_sensors(sensor_id VARCHAR(255),"
+					+ " device_id VARCHAR(255), last_time TIMESTAMP)");
+			
+			ResultSet rs = stmt.executeQuery("SELECT * FROM sensor_data");
             ResultSetMetaData meta = rs.getMetaData();
             while (rs.next()) {
                 writeResult(rs, meta.getColumnCount());
             }
             /*
-			rs = stmt.executeQuery("CALL DISK_SPACE_USED('sensors_data')");
+			rs = stmt.executeQuery("CALL DISK_SPACE_USED('sensor_data')");
 			meta = rs.getMetaData();
             while (rs.next()) {
                 writeResult(rs, meta.getColumnCount());
@@ -182,7 +185,7 @@ public class MqttH2StorageController implements MqttCallback {
 				String sensorId = sensorData.getSensor().getId();
 				Timestamp startDateTime = new Timestamp(sensorData.getStartTime().getTime());
 				Timestamp endDateTime = new Timestamp(sensorData.getEndTime().getTime());
-				boolean result = stmt.execute("INSERT INTO sensors_data (sensor_id, device_id, data_value, start_datetime, end_datetime) values "
+				boolean result = stmt.execute("INSERT INTO sensor_data (sensor_id, device_id, data_value, start_datetime, end_datetime) values "
 						+ "('"+ sensorId + "', '" + device.getId() +"', '" + sensorData.getValue() + "' ,'" + startDateTime
 						+ "', '" + endDateTime + "')");
 				if(result){
@@ -207,7 +210,7 @@ public class MqttH2StorageController implements MqttCallback {
 			cal.add(Calendar.HOUR, (-1)* Integer.parseInt(this.numOfHoursDataStored));
 			Date date = cal.getTime();
 			String strDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
-			stmt.execute("DELETE FROM sensors_data WHERE end_datetime <= '"+ strDate + "'" );
+			stmt.execute("DELETE FROM sensor_data WHERE end_datetime <= '"+ strDate + "' AND aggregation_status = 0" );
 			dbConn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

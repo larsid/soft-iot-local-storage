@@ -27,7 +27,7 @@ public class LocalDataControllerImpl implements LocalDataController{
 		try {
 			Connection dbConnection = this.dataSource.getConnection();
 			Statement stmt = dbConnection.createStatement();
-			String query = "SELECT * FROM sensors_data WHERE device_id='" + device.getId() + "' AND " +
+			String query = "SELECT * FROM sensor_data WHERE device_id='" + device.getId() + "' AND " +
 					   "sensor_id='" + sensor.getId() + "' ORDER BY start_datetime DESC LIMIT 1";
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -52,7 +52,7 @@ public class LocalDataControllerImpl implements LocalDataController{
 			Statement stmt = dbConnection.createStatement();
 			Timestamp startTimestamp = new java.sql.Timestamp(startDateTime.getTime());
 			Timestamp endTimestamp = new java.sql.Timestamp(endDateTime.getTime());
-			String query = "SELECT * FROM sensors_data WHERE device_id='" + device.getId() + "' AND " +
+			String query = "SELECT * FROM sensor_data WHERE device_id='" + device.getId() + "' AND " +
 					   "sensor_id='" + sensor.getId() + "' AND start_datetime > '" + startTimestamp + "' AND " +
 					   "end_datetime <= '" + endTimestamp + "' ORDER BY start_datetime ASC";
 			ResultSet rs = stmt.executeQuery(query);
@@ -75,7 +75,7 @@ public class LocalDataControllerImpl implements LocalDataController{
 			Connection dbConnection = this.dataSource.getConnection();
 			Statement stmt = dbConnection.createStatement();
 			Timestamp lastTimestamp = new java.sql.Timestamp(lastDateTime.getTime());
-			String query = "SELECT * FROM sensors_data WHERE device_id='" + device.getId() + "' AND " +
+			String query = "SELECT * FROM sensor_data WHERE device_id='" + device.getId() + "' AND " +
 					   "sensor_id='" + sensor.getId() + "' AND " +
 					   "start_datetime > '" + lastTimestamp + "' ORDER BY start_datetime ASC";
 			ResultSet rs = stmt.executeQuery(query);
@@ -90,6 +90,105 @@ public class LocalDataControllerImpl implements LocalDataController{
 			e.printStackTrace();
 		}
 		return sensorData;
+	}
+	
+	public List<SensorData> getSensorDataByAggregationStatusAndDate(Device device, Sensor sensor, int aggregationStatus, Date lastDate){
+		List<SensorData> sensorData = new ArrayList<SensorData>();
+		try {
+			Connection dbConnection = this.dataSource.getConnection();
+			Statement stmt = dbConnection.createStatement();
+			Timestamp lastTimestamp = new java.sql.Timestamp(lastDate.getTime());
+			String query = "SELECT * FROM sensor_data WHERE device_id='" + device.getId() + "' AND " +
+					   "sensor_id='" + sensor.getId() + "' AND " +
+					   "aggregation_status = '" + aggregationStatus + "' AND start_datetime >'" + lastTimestamp +
+					   "' ORDER BY start_datetime ASC";
+			ResultSet rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				Date startDate = new Date(rs.getTimestamp("start_datetime").getTime());
+				Date endDate = new Date(rs.getTimestamp("end_datetime").getTime());
+				sensorData.add(new SensorData(device, sensor, rs.getString("data_value"), startDate, endDate));
+			}
+			dbConnection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sensorData;
+	}
+	
+	public void insertSensorDataAggregated(List<SensorData> listSensorData, int aggregationStatus){
+		Connection dbConnection;
+		try {
+			dbConnection = this.dataSource.getConnection();
+			Statement stmt = dbConnection.createStatement();
+			for(SensorData sensorData : listSensorData){
+				Timestamp startDateTime = new Timestamp(sensorData.getStartTime().getTime());
+				Timestamp endDateTime = new Timestamp(sensorData.getEndTime().getTime());
+				boolean result = stmt.execute("INSERT INTO sensor_data (sensor_id, device_id, data_value,"
+						+ " start_datetime, end_datetime, aggregation_status) values ('"+ sensorData.getSensor().getId() + "', '"
+						+ sensorData.getDevice().getId() +"', '" + sensorData.getValue() + "' ,'"
+						+ startDateTime + "', '" + endDateTime + "'," + aggregationStatus + ")");
+				if(result){
+					printlnDebug("cannot insert data:" + "('"+ sensorData.getSensor().getId() + "', '" + sensorData.getDevice().getId() +"', '" + sensorData.getValue() + "' ,'" + startDateTime
+							+ "', '" + endDateTime + "')");
+				}
+			}
+			dbConnection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void createFirstLastSensorDataAggregated(Device device, Sensor sensor, Date lastDateTime){
+		Connection dbConnection;
+		try {
+			dbConnection = this.dataSource.getConnection();
+			Statement stmt = dbConnection.createStatement();
+			Timestamp lastTimestamp = new java.sql.Timestamp(lastDateTime.getTime());
+			stmt.execute("INSERT INTO aggregation_registered_last_time_sensors (sensor_id, device_id, last_time)"
+					+ " VALUES('"+ device.getId() +"', '"+ sensor.getId() +"', '"
+					+ lastTimestamp +"')");
+			dbConnection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateLastSensorDataAggregated(Device device, Sensor sensor, Date lastDateTime){
+		Connection dbConnection;
+		try {
+			dbConnection = this.dataSource.getConnection();
+			Statement stmt = dbConnection.createStatement();
+			Timestamp lastTimestamp = new java.sql.Timestamp(lastDateTime.getTime());
+			stmt.execute("UPDATE aggregation_registered_last_time_sensors SET last_time='"
+					+ lastTimestamp + "' WHERE sensor_id='" + sensor.getId() + "' AND "  
+					+ "device_id='" + device.getId() + "'");
+			dbConnection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public Date getLastDateOfAggregatedSensorData(Device device, Sensor sensor){
+		Connection dbConnection;
+		try {
+			dbConnection = this.dataSource.getConnection();
+			Statement stmt = dbConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM aggregation_registered_last_time_sensors"
+					+ " WHERE sensor_id='" + sensor.getId() + "' AND "  
+					+ "device_id='" + device.getId() + "'");
+			if(rs.next()){
+				return rs.getDate("last_time");
+			}
+			dbConnection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public void createFirstLastSensorDataEnriched(Device device, Sensor sensor, Date lastDateTime){
