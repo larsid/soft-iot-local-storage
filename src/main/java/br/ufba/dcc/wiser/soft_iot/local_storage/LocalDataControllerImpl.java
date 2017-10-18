@@ -1,6 +1,7 @@
 package br.ufba.dcc.wiser.soft_iot.local_storage;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,6 +22,30 @@ public class LocalDataControllerImpl implements LocalDataController{
 	private DataSource dataSource;
 	private boolean debugModeValue;
 	
+	
+	public void init(){
+		Connection dbConnection;
+		try {
+			dbConnection = this.dataSource.getConnection();
+			Statement stmt = dbConnection.createStatement();
+			//stmt.execute("drop table semantic_registered_last_time_sensors");
+			//stmt.execute("drop table aggregation_registered_last_time_sensors");
+			DatabaseMetaData dbMeta = dbConnection.getMetaData();
+			printlnDebug("Using datasource "
+					+ dbMeta.getDatabaseProductName() + ", URL "
+					+ dbMeta.getURL());
+			
+			stmt.execute("CREATE TABLE IF NOT EXISTS semantic_registered_last_time_sensors(sensor_id VARCHAR(255),"
+					+ " device_id VARCHAR(255), last_time TIMESTAMP)");
+			
+			stmt.execute("CREATE TABLE IF NOT EXISTS aggregation_registered_last_time_sensors(sensor_id VARCHAR(255),"
+					+ " device_id VARCHAR(255), last_time TIMESTAMP)");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public SensorData getLastSensorData(Device device, Sensor sensor){
 		SensorData sensorData = null;

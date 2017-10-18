@@ -73,6 +73,8 @@ public class MqttH2StorageController implements MqttCallback {
 			Connection dbConnection = this.dataSource.getConnection();
 			Statement stmt = dbConnection.createStatement();
 			//stmt.execute("drop table sensor_data");
+			//stmt.execute("drop table semantic_registered_last_time_sensors");
+			//stmt.execute("drop table aggregation_registered_last_time_sensors");
 			DatabaseMetaData dbMeta = dbConnection.getMetaData();
 			printlnDebug("Using datasource "
 					+ dbMeta.getDatabaseProductName() + ", URL "
