@@ -17,7 +17,7 @@ url=jdbc:h2:${karaf.data}/fot-gateway-local-storage
 dataSourceName=fot-gateway-local-storage
 ```
 
-FoT-Storage has a configuration file (*br.ufba.dcc.wiser.soft_iot.local_storage.cfg*), where is possible set informations about MQTT server, default frequency to collect data sensor and the frequency of execution of procedure to clean database.
+FoT-Storage has a configuration file (*br.ufba.dcc.wiser.soft_iot.local_storage.cfg*), where is possible set information about MQTT server, default frequency to collect data sensor and the frequency of execution of procedure to clean database.
 
 Finally, for correct execution of module you need copy the file:
 ```
