@@ -8,6 +8,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.osgi.service.blueprint.container.ServiceUnavailableException;
 
 import br.ufba.dcc.wiser.soft_iot.entities.Device;
 import br.ufba.dcc.wiser.soft_iot.entities.Sensor;
@@ -53,20 +54,24 @@ public class MqttPublisherController {
 	}
 	
 	public void sendFlowRequestBySensorDevice(){
-		List<Device> devices = fotDevices.getListDevices();
-		for(Device device : devices){
-			List<Sensor> sensors = device.getSensors();
-			for(Sensor sensor : sensors){
-				String flowRequest;
-				if(sensor.getCollection_time() <= 0){
-					flowRequest = TATUWrapper.getTATUFlow(sensor.getId(), defaultCollectionTime, defaultPublishingTime);
-				}else{
-					flowRequest = TATUWrapper.getTATUFlow(sensor.getId(), sensor.getCollection_time(), sensor.getPublishing_time());
+		try{
+			List<Device> devices = fotDevices.getListDevices();
+			for(Device device : devices){
+				List<Sensor> sensors = device.getSensors();
+				for(Sensor sensor : sensors){
+					String flowRequest;
+					if(sensor.getCollection_time() <= 0){
+						flowRequest = TATUWrapper.getTATUFlow(sensor.getId(), defaultCollectionTime, defaultPublishingTime);
+					}else{
+						flowRequest = TATUWrapper.getTATUFlow(sensor.getId(), sensor.getCollection_time(), sensor.getPublishing_time());
+					}
+					printlnDebug("[topic: " + device.getId() +"] " + flowRequest);
+					publishTATUMessage(flowRequest, device.getId());
 				}
-				printlnDebug("[topic: " + device.getId() +"] " + flowRequest);
-				publishTATUMessage(flowRequest, device.getId());
+				
 			}
-			
+		}catch (ServiceUnavailableException e) {
+			e.printStackTrace();
 		}
 	}
 	

@@ -23,6 +23,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.osgi.service.blueprint.container.ServiceUnavailableException;
 
 import br.ufba.dcc.wiser.soft_iot.entities.Device;
 import br.ufba.dcc.wiser.soft_iot.entities.Sensor;
@@ -67,6 +68,8 @@ public class MqttH2StorageController implements MqttCallback {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
+		}catch (ServiceUnavailableException e) {
+			e.printStackTrace();
 		}
 
 		try {
@@ -149,6 +152,8 @@ public class MqttH2StorageController implements MqttCallback {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
+		}catch (ServiceUnavailableException e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -164,16 +169,20 @@ public class MqttH2StorageController implements MqttCallback {
 			public void run() {
 				String messageContent = new String(message.getPayload());
 				if(TATUWrapper.isValidTATUAnswer(messageContent)){
-					
-					String deviceId = TATUWrapper.getDeviceIdByTATUAnswer(messageContent);
-					Device device = fotDevices.getDeviceById(deviceId);
-					
-					String sensorId = TATUWrapper.getSensorIdByTATUAnswer(messageContent);
-					Sensor sensor = device.getSensorbySensorId(sensorId);
-					Date date = new Date();
-					List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(messageContent,device,sensor,date);
-					printlnDebug("answer received: device: " + deviceId +  " - sensor: " + sensor.getId() + " - number of data sensor: " + listSensorData.size());
-					storeSensorData(listSensorData, device);
+					try{	
+						String deviceId = TATUWrapper.getDeviceIdByTATUAnswer(messageContent);
+						Device device = fotDevices.getDeviceById(deviceId);
+						
+						String sensorId = TATUWrapper.getSensorIdByTATUAnswer(messageContent);
+						Sensor sensor = device.getSensorbySensorId(sensorId);
+						Date date = new Date();
+						List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(messageContent,device,sensor,date);
+						printlnDebug("answer received: device: " + deviceId +  " - sensor: " + sensor.getId() + " - number of data sensor: " + listSensorData.size());
+						storeSensorData(listSensorData, device);
+					}
+					catch (ServiceUnavailableException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}).start();
