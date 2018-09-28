@@ -19,16 +19,16 @@ To install this bundle using our custom maven support execute the following comm
 config:edit org.ops4j.pax.url.mvn 
 config:property-append org.ops4j.pax.url.mvn.repositories ", https://github.com/WiserUFBA/wiser-mvn-repo/raw/master/releases@id=wiser"
 config:update
-bundle:install mvn:br.ufba.dcc.wiser.soft_iot/fot-gateway-mapping-devices/1.0.0
-bundle:install mvn:br.ufba.dcc.wiser.soft_iot/fot-gateway-local-storage/1.0.0
+bundle:install mvn:br.ufba.dcc.wiser.soft_iot/soft-iot-mapping-devices/1.0.0
+bundle:install mvn:br.ufba.dcc.wiser.soft_iot/soft-iot-local-storage/1.0.0
 ```
 
 After this you need create a file with database configuration. The filename is **etc/org.ops4j.datasource-gateway.cfg**. The content of file is:
 
 ```
 osgi.jdbc.driver.name=H2-pool-xa
-url=jdbc:h2:${karaf.data}/fot-gateway-local-storage
-dataSourceName=fot-gateway-local-storage
+url=jdbc:h2:${karaf.data}/soft-iot-local-storage
+dataSourceName=soft-iot-local-storage
 ```
 
 FoT-Storage has a configuration file (*br.ufba.dcc.wiser.soft_iot.local_storage.cfg*), where is possible set information about MQTT server, default frequency to collect data sensor and the frequency of execution of procedure to clean database.
