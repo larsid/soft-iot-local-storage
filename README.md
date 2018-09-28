@@ -35,7 +35,7 @@ FoT-Storage has a configuration file (*br.ufba.dcc.wiser.soft_iot.local_storage.
 
 Finally, for correct execution of module you need copy the file:
 ```
-fot-gateway-local-storage/src/main/resources/br.ufba.dcc.wiser.soft_iot.local_storage.cfg
+soft-iot-local-storage/src/main/resources/br.ufba.dcc.wiser.soft_iot.local_storage.cfg
 ```
 to:
 ```
