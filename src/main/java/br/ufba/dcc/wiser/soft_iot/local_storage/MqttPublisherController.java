@@ -61,9 +61,9 @@ public class MqttPublisherController {
 				for(Sensor sensor : sensors){
 					String flowRequest;
 					if(sensor.getCollection_time() <= 0){
-						flowRequest = TATUWrapper.getTATUFlow(sensor.getId(), defaultCollectionTime, defaultPublishingTime);
+						flowRequest = TATUWrapper.getTATUFlowValue(sensor.getId(), defaultCollectionTime, defaultPublishingTime);
 					}else{
-						flowRequest = TATUWrapper.getTATUFlow(sensor.getId(), sensor.getCollection_time(), sensor.getPublishing_time());
+						flowRequest = TATUWrapper.getTATUFlowValue(sensor.getId(), sensor.getCollection_time(), sensor.getPublishing_time());
 					}
 					printlnDebug("[topic: " + device.getId() +"] " + flowRequest);
 					publishTATUMessage(flowRequest, device.getId());

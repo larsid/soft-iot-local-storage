@@ -20,7 +20,7 @@
  http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
 
 	<reference id="dataBase" interface="javax.sql.DataSource"
-		availability="optional" filter="(dataSourceName=fot-gateway-local-storage)" />
+		availability="optional" filter="(dataSourceName=soft-iot-local-storage)" />
 
 	<reference id="connectedDevices" interface="br.ufba.dcc.wiser.soft_iot.mapping_devices.Controller"
 		availability="optional" />

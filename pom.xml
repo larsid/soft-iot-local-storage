@@ -5,8 +5,8 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>FoT-Gateway-Local-Storage</name>
-	<artifactId>fot-gateway-local-storage</artifactId>
+	<name>SOFT-IoT-Local-Storage</name>
+	<artifactId>soft-iot-local-storage</artifactId>
 	<description>Module of SOFT-IoT plataform to collected data sensors of connected devices and store them in a local database.</description>
 	<groupId>br.ufba.dcc.wiser.soft_iot</groupId>
 	<version>1.0.0</version>
