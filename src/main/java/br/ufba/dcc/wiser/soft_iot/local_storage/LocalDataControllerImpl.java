@@ -117,6 +117,29 @@ public class LocalDataControllerImpl implements LocalDataController{
 		return sensorData;
 	}
 	
+	public List<SensorData> getSensorDataByAggregationStatus(Device device, Sensor sensor, int aggregationStatus){
+		List<SensorData> sensorData = new ArrayList<SensorData>();
+		try {
+			Connection dbConnection = this.dataSource.getConnection();
+			Statement stmt = dbConnection.createStatement();
+			String query = "SELECT * FROM sensor_data WHERE device_id='" + device.getId() + "' AND " +
+					   "sensor_id='" + sensor.getId() + "' AND " +
+					   "aggregation_status = '" + aggregationStatus +
+					   "' ORDER BY start_datetime ASC";
+			ResultSet rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				Date startDate = new Date(rs.getTimestamp("start_datetime").getTime());
+				Date endDate = new Date(rs.getTimestamp("end_datetime").getTime());
+				sensorData.add(new SensorData(device, sensor, rs.getString("data_value"), startDate, endDate));
+			}
+			dbConnection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sensorData;
+	}
+	
 	public List<SensorData> getSensorDataByAggregationStatusAndDate(Device device, Sensor sensor, int aggregationStatus, Date lastDate){
 		List<SensorData> sensorData = new ArrayList<SensorData>();
 		try {
