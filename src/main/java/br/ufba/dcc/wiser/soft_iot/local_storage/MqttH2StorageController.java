@@ -173,9 +173,10 @@ public class MqttH2StorageController implements MqttCallback {
 			public void run() {
 				
 				String messageContent = new String(message.getPayload());
-				printlnDebug("topic: " + topic + "message: " + messageContent);
+				printlnDebug("topic: " + topic + " message: " + messageContent);
 				if(TATUWrapper.isValidTATUAnswer(messageContent)){
-					try{	
+					try{
+						printlnDebug("valid TATU answer");
 						String deviceId = TATUWrapper.getDeviceIdByTATUAnswer(messageContent);
 						Device device = fotDevices.getDeviceById(deviceId);
 						
