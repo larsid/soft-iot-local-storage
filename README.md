@@ -33,11 +33,11 @@ dataSourceName=soft-iot-local-storage
 
 FoT-Storage has a configuration file (*br.ufba.dcc.wiser.soft_iot.local_storage.cfg*), where is possible set information about MQTT server, default frequency to collect data sensor and the frequency of execution of procedure to clean database.
 
-Finally, for correct execution of module you need copy the file:
+Finally, for correct execution of module you need copy, from src folder here in GitHub, the file:
 ```
 soft-iot-local-storage/src/main/resources/br.ufba.dcc.wiser.soft_iot.local_storage.cfg
 ```
-to:
+to your local etc folder of ServiceMix:
 ```
 <servicemix_directory>/etc
 ```
