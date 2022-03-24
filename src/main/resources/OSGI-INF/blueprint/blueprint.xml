@@ -23,7 +23,14 @@
 		availability="optional" filter="(dataSourceName=soft-iot-local-storage)" />
 
 	<reference id="connectedDevices" interface="br.ufba.dcc.wiser.soft_iot.mapping_devices.Controller"
-		availability="optional" />
+		availability="optional">
+            <reference-listener bind-method="onBind" unbind-method="onUnbind">
+                <bean class="br.uefs.larsid.extended.local_storage.listener.MappingDevicesListener">
+                    <property name="debugModeValue" value="${debugMode}" />
+                    <property name="mqttPublisher" ref="busObj" />
+                </bean>
+            </reference-listener>
+        </reference>
 
 	<bean id="busObj" class="br.ufba.dcc.wiser.soft_iot.local_storage.MqttPublisherController"
 		init-method="init" destroy-method="destroy">
