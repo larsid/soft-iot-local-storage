@@ -46,6 +46,8 @@ public class MqttPublisherController {
             publisher.connect(connOpt);
             printlnDebug("Sending FLOW messages:");
             sendFlowRequestBySensorDevice();
+        } catch (ServiceUnavailableException e) {
+            e.printStackTrace();
         } catch (MqttSecurityException e) {
             e.printStackTrace();
         } catch (MqttException e) {
