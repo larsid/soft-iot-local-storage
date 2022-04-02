@@ -101,6 +101,14 @@ public class MqttH2StorageController implements MqttCallback {
     }
   }
 
+  public void subscribeDevicesTopics() {
+    try {
+      this.subscribeDevicesTopics(fotDevices.getListDevices());
+    } catch (MqttException e) {
+      e.printStackTrace();
+    }
+  }
+
   private void subscribeDevicesTopics(List<Device> devices)
     throws MqttException {
     this.subscriber.subscribe("CONNECTED", 1);
@@ -148,7 +156,8 @@ public class MqttH2StorageController implements MqttCallback {
     }
   }
 
-  public void deliveryComplete(IMqttDeliveryToken arg0) {}
+  @Override
+  public void deliveryComplete(IMqttDeliveryToken token) {}
 
   public synchronized void messageArrived(
     final String topic,
