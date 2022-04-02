@@ -18,8 +18,7 @@ public class MappingDevicesListener {
     public void onBind(ServiceReference ref) {
         printlnDebug("Bound service: " + ref);
         this.mqttPublisher.sendFlowRequestBySensorDevice();
-        this.mqttH2Storage.disconnect();
-        this.mqttH2Storage.init();
+        this.mqttH2Storage.subscribeDevicesTopics();
     }
 
     public void onUnbind(ServiceReference ref) {
