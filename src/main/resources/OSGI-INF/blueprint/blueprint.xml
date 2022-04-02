@@ -28,6 +28,7 @@
                 <bean class="br.uefs.larsid.extended.local_storage.listener.MappingDevicesListener">
                     <property name="debugModeValue" value="${debugMode}" />
                     <property name="mqttPublisher" ref="busObj" />
+                    <property name="mqttH2Storage" ref="MqttH2StorageControllerBean" />
                 </bean>
             </reference-listener>
         </reference>

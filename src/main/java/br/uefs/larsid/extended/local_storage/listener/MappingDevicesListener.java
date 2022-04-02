@@ -2,6 +2,7 @@ package br.uefs.larsid.extended.local_storage.listener;
 
 import org.osgi.framework.ServiceReference;
 
+import br.ufba.dcc.wiser.soft_iot.local_storage.MqttH2StorageController;
 import br.ufba.dcc.wiser.soft_iot.local_storage.MqttPublisherController;
 
 /**
@@ -12,10 +13,13 @@ public class MappingDevicesListener {
 
     private boolean debugModeValue;
     private MqttPublisherController mqttPublisher;
+    private MqttH2StorageController mqttH2Storage;
 
     public void onBind(ServiceReference ref) {
         printlnDebug("Bound service: " + ref);
         this.mqttPublisher.sendFlowRequestBySensorDevice();
+        this.mqttH2Storage.disconnect();
+        this.mqttH2Storage.init();
     }
 
     public void onUnbind(ServiceReference ref) {
@@ -34,5 +38,9 @@ public class MappingDevicesListener {
 
     public void setMqttPublisher(MqttPublisherController mqttPublisher) {
         this.mqttPublisher = mqttPublisher;
+    }
+
+    public void setMqttH2Storage(MqttH2StorageController mqttH2Storage) {
+      this.mqttH2Storage = mqttH2Storage;
     }
 }
