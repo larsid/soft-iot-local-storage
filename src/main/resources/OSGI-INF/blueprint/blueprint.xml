@@ -33,6 +33,11 @@
             </reference-listener>
         </reference>
 
+    <reference 
+        id="deviceManagerService" 
+        interface="br.uefs.larsid.extended.mapping.devices.services.IDevicePropertiesManager"
+    />
+
 	<bean id="busObj" class="br.ufba.dcc.wiser.soft_iot.local_storage.MqttPublisherController"
 		init-method="init" destroy-method="destroy">
 		<property name="brokerUrl" value="${MQTTHost}" />
@@ -57,6 +62,7 @@
 		<property name="numOfHoursDataStored" value="${NumberOfHoursDataStored}" />
 		<property name="fotDevices" ref="connectedDevices" />
 		<property name="debugModeValue" value="${debugMode}" />
+        <property name="deviceManager" ref="deviceManagerService"/>
 	</bean>
 	
 	<bean id="LocalDataControllerBean" class="br.ufba.dcc.wiser.soft_iot.local_storage.LocalDataControllerImpl">
