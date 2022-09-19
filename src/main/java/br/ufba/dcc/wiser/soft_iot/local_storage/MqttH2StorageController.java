@@ -1,10 +1,12 @@
 package br.ufba.dcc.wiser.soft_iot.local_storage;
 
+import br.uefs.larsid.extended.mapping.devices.services.IDevicePropertiesManager;
 import br.ufba.dcc.wiser.soft_iot.entities.Device;
 import br.ufba.dcc.wiser.soft_iot.entities.Sensor;
 import br.ufba.dcc.wiser.soft_iot.entities.SensorData;
 import br.ufba.dcc.wiser.soft_iot.mapping_devices.Controller;
 import br.ufba.dcc.wiser.soft_iot.tatu.TATUWrapper;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -22,6 +24,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
+import org.json.JSONObject;
 import org.osgi.service.blueprint.container.ServiceUnavailableException;
 
 public class MqttH2StorageController implements MqttCallback {
@@ -40,6 +43,8 @@ public class MqttH2StorageController implements MqttCallback {
   private int defaultCollectionTime;
   private int defaultPublishingTime;
   private boolean debugModeValue;
+  private IDevicePropertiesManager deviceManager;
+  private boolean flag = false;
 
   public void init() {
     MqttConnectOptions connOpt = new MqttConnectOptions();
@@ -171,6 +176,8 @@ public class MqttH2StorageController implements MqttCallback {
           printlnDebug("topic: " + topic + " message: " + messageContent);
           if (TATUWrapper.isValidTATUAnswer(messageContent)) {
             try {
+              flag = false;
+
               printlnDebug("valid TATU answer");
               String deviceId = TATUWrapper.getDeviceIdByTATUAnswer(
                 messageContent
@@ -213,6 +220,35 @@ public class MqttH2StorageController implements MqttCallback {
             } catch (InterruptedException e) {
               e.printStackTrace();
             } catch (ServiceUnavailableException e) {
+              e.printStackTrace();
+            }
+          } else if (messageContent.contains("FLOW VALUE") && !flag) {
+            String sensorId = messageContent.split(" ")[2];
+            String deviceId = topic.split("/")[1];
+
+            Device device = fotDevices.getDeviceById(deviceId);
+
+            try {
+              int stringIndex = messageContent.indexOf("{");
+              JSONObject json = new JSONObject(
+                messageContent.substring(stringIndex)
+              );
+
+              int collection_time = json.getInt("collect");
+              int publishing_time = json.getInt("publish");
+
+              /* Altera o valor do 'collect' e 'publish'. */
+              device
+                .getSensorbySensorId(sensorId)
+                .setCollection_time(collection_time);
+              device
+                .getSensorbySensorId(sensorId)
+                .setPublishing_time(publishing_time);
+
+              /* Atualiza o dispositivo no soft-iot-mapping-devices */
+              deviceManager.removeDevice(deviceId);
+              deviceManager.addDevice(device);
+            } catch (IOException e) {
               e.printStackTrace();
             }
           }
@@ -402,5 +438,21 @@ public class MqttH2StorageController implements MqttCallback {
 
   public void setDebugModeValue(boolean debugModeValue) {
     this.debugModeValue = debugModeValue;
+  }
+
+  public void setDeviceManager(IDevicePropertiesManager deviceManager) {
+    this.deviceManager = deviceManager;
+  }
+
+  public void setSubscriber(MqttClient subscriber) {
+    this.subscriber = subscriber;
+  }
+
+  public void setNumOfHoursDataStored(String numOfHoursDataStored) {
+    this.numOfHoursDataStored = numOfHoursDataStored;
+  }
+
+  public void setFlag(boolean flag) {
+    this.flag = flag;
   }
 }
