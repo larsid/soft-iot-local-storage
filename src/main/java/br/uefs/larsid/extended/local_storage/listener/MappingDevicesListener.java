@@ -18,9 +18,7 @@ public class MappingDevicesListener {
     public void onBind(ServiceReference ref) {
         printlnDebug("Bound service: " + ref); 
         
-        // TODO: Rever
         this.mqttH2Storage.setFlag(true);
-        
         
         this.mqttPublisher.sendFlowRequestBySensorDevice();
         this.mqttH2Storage.subscribeDevicesTopics();
@@ -29,7 +27,6 @@ public class MappingDevicesListener {
     public void onUnbind(ServiceReference ref) {
         printlnDebug("Unbound service: " + ref);
 
-        // TODO: Rever
         this.mqttH2Storage.setFlag(true);
     }
 
