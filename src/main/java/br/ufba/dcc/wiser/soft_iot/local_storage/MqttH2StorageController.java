@@ -223,18 +223,10 @@ public class MqttH2StorageController implements MqttCallback {
               e.printStackTrace();
             }
           } else if (messageContent.contains("FLOW VALUE") && !flag) {
-            System.out.println("BBBBB");
-            String[] temp = messageContent.split(" "); // TODO: Rever
+            String sensorId = messageContent.split(" ")[2];
+            String deviceId = topic.split("/")[1];
 
-            System.out.println(messageContent); // TODO: Rever
-
-            System.out.println(topic);
-
-            // FLOW VALUE temperatureSensor {"collect":2000,"publish":200}
-
-            String[] temp2 = topic.split("/");
-
-            Device device = fotDevices.getDeviceById(temp2[1]);
+            Device device = fotDevices.getDeviceById(deviceId);
 
             try {
               int stringIndex = messageContent.indexOf("{");
@@ -245,15 +237,16 @@ public class MqttH2StorageController implements MqttCallback {
               int collection_time = json.getInt("collect");
               int publishing_time = json.getInt("publish");
 
+              /* Altera o valor do 'collect' e 'publish'. */
               device
-                .getSensorbySensorId(temp[2])
+                .getSensorbySensorId(sensorId)
                 .setCollection_time(collection_time);
               device
-                .getSensorbySensorId(temp[2])
+                .getSensorbySensorId(sensorId)
                 .setPublishing_time(publishing_time);
 
               /* Atualiza o dispositivo no soft-iot-mapping-devices */
-              deviceManager.removeDevice(temp2[1]);
+              deviceManager.removeDevice(deviceId);
               deviceManager.addDevice(device);
             } catch (IOException e) {
               e.printStackTrace();
