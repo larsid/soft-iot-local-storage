@@ -177,26 +177,28 @@ public class MqttH2StorageController implements MqttCallback {
               );
               Device device = fotDevices.getDeviceById(deviceId);
 
-              String sensorId = TATUWrapper.getSensorIdByTATUAnswer(
-                messageContent
-              );
-              Sensor sensor = device.getSensorbySensorId(sensorId);
-              Date date = new Date();
-              List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(
-                messageContent,
-                device,
-                sensor,
-                date
-              );
-              printlnDebug(
-                "answer received: device: " +
-                deviceId +
-                " - sensor: " +
-                sensor.getId() +
-                " - number of data sensor: " +
-                listSensorData.size()
-              );
-              storeSensorData(listSensorData, device);
+              if (device != null) {
+                String sensorId = TATUWrapper.getSensorIdByTATUAnswer(
+                  messageContent
+                );
+                Sensor sensor = device.getSensorbySensorId(sensorId);
+                Date date = new Date();
+                List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(
+                  messageContent,
+                  device,
+                  sensor,
+                  date
+                );
+                printlnDebug(
+                  "answer received: device: " +
+                  deviceId +
+                  " - sensor: " +
+                  sensor.getId() +
+                  " - number of data sensor: " +
+                  listSensorData.size()
+                );
+                storeSensorData(listSensorData, device);
+              }
             } catch (ServiceUnavailableException e) {
               e.printStackTrace();
             }
