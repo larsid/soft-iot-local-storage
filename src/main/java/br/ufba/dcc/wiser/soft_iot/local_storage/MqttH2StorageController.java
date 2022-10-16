@@ -170,37 +170,45 @@ public class MqttH2StorageController implements MqttCallback {
           String messageContent = new String(message.getPayload());
           printlnDebug("topic: " + topic + " message: " + messageContent);
           if (TATUWrapper.isValidTATUAnswer(messageContent)) {
+            printlnDebug("valid TATU answer");
+            String deviceId = TATUWrapper.getDeviceIdByTATUAnswer(
+              messageContent
+            );
+
+            Device device = null;
+
             try {
-              printlnDebug("valid TATU answer");
-              String deviceId = TATUWrapper.getDeviceIdByTATUAnswer(
+              device = fotDevices.getDeviceById(deviceId);
+            } catch (Exception e) {
+              try {
+                Thread.sleep(3000);
+              } catch (InterruptedException e1) {
+                e1.printStackTrace();
+              }
+              device = fotDevices.getDeviceById(deviceId);
+            }
+
+            if (device != null) {
+              String sensorId = TATUWrapper.getSensorIdByTATUAnswer(
                 messageContent
               );
-              Device device = fotDevices.getDeviceById(deviceId);
-
-              if (device != null) {
-                String sensorId = TATUWrapper.getSensorIdByTATUAnswer(
-                  messageContent
-                );
-                Sensor sensor = device.getSensorbySensorId(sensorId);
-                Date date = new Date();
-                List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(
-                  messageContent,
-                  device,
-                  sensor,
-                  date
-                );
-                printlnDebug(
-                  "answer received: device: " +
-                  deviceId +
-                  " - sensor: " +
-                  sensor.getId() +
-                  " - number of data sensor: " +
-                  listSensorData.size()
-                );
-                storeSensorData(listSensorData, device);
-              }
-            } catch (ServiceUnavailableException e) {
-              e.printStackTrace();
+              Sensor sensor = device.getSensorbySensorId(sensorId);
+              Date date = new Date();
+              List<SensorData> listSensorData = TATUWrapper.parseTATUAnswerToListSensorData(
+                messageContent,
+                device,
+                sensor,
+                date
+              );
+              printlnDebug(
+                "answer received: device: " +
+                deviceId +
+                " - sensor: " +
+                sensor.getId() +
+                " - number of data sensor: " +
+                listSensorData.size()
+              );
+              storeSensorData(listSensorData, device);
             }
           } else if (topic.contentEquals("CONNECTED")) {
             printlnDebug(
