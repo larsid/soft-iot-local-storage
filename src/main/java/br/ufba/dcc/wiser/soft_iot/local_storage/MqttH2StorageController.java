@@ -66,7 +66,8 @@ public class MqttH2StorageController implements MqttCallback {
       e.printStackTrace();
       System.exit(-1);
     } catch (ServiceUnavailableException e) {
-      e.printStackTrace();
+      printlnDebug("Unable to send a FLOW request.");
+      printlnDebug(e.toString());
     }
 
     try {
@@ -170,13 +171,25 @@ public class MqttH2StorageController implements MqttCallback {
           String messageContent = new String(message.getPayload());
           printlnDebug("topic: " + topic + " message: " + messageContent);
           if (TATUWrapper.isValidTATUAnswer(messageContent)) {
-            try {
-              printlnDebug("valid TATU answer");
-              String deviceId = TATUWrapper.getDeviceIdByTATUAnswer(
-                messageContent
-              );
-              Device device = fotDevices.getDeviceById(deviceId);
+            printlnDebug("valid TATU answer");
+            String deviceId = TATUWrapper.getDeviceIdByTATUAnswer(
+              messageContent
+            );
 
+            Device device = null;
+
+            try {
+              device = fotDevices.getDeviceById(deviceId);
+            } catch (Exception e) {
+              try {
+                Thread.sleep(3000);
+              } catch (InterruptedException e1) {
+                e1.printStackTrace();
+              }
+              device = fotDevices.getDeviceById(deviceId);
+            }
+
+            if (device != null) {
               String sensorId = TATUWrapper.getSensorIdByTATUAnswer(
                 messageContent
               );
@@ -197,8 +210,6 @@ public class MqttH2StorageController implements MqttCallback {
                 listSensorData.size()
               );
               storeSensorData(listSensorData, device);
-            } catch (ServiceUnavailableException e) {
-              e.printStackTrace();
             }
           } else if (topic.contentEquals("CONNECTED")) {
             printlnDebug(

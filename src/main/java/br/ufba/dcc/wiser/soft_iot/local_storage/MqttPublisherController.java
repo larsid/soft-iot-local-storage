@@ -82,7 +82,8 @@ public class MqttPublisherController {
         }
       }
     } catch (ServiceUnavailableException e) {
-      e.printStackTrace();
+      printlnDebug("Unable to send a FLOW request.");
+      printlnDebug(e.toString());
     }
   }
 
