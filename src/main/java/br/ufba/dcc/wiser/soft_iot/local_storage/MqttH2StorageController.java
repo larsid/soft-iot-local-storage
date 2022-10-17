@@ -66,7 +66,8 @@ public class MqttH2StorageController implements MqttCallback {
       e.printStackTrace();
       System.exit(-1);
     } catch (ServiceUnavailableException e) {
-      e.printStackTrace();
+      printlnDebug("Unable to send a FLOW request.");
+      printlnDebug(e.toString());
     }
 
     try {
