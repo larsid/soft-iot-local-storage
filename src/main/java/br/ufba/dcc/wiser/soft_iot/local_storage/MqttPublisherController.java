@@ -5,6 +5,7 @@ import br.ufba.dcc.wiser.soft_iot.entities.Sensor;
 import br.ufba.dcc.wiser.soft_iot.mapping_devices.Controller;
 import br.ufba.dcc.wiser.soft_iot.tatu.TATUWrapper;
 import java.util.List;
+import java.util.logging.Logger;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -109,8 +110,10 @@ public class MqttPublisherController {
   }
 
   private void printlnDebug(String str) {
+    Logger log = Logger.getLogger(MqttPublisherController.class.getName());
+    
     if (debugModeValue) {
-      System.out.println(str);
+      log.info(str);
     }
   }
 

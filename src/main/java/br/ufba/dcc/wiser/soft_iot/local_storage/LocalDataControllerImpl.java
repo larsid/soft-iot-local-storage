@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -322,8 +323,10 @@ public class LocalDataControllerImpl implements LocalDataController {
     }
 
     private void printlnDebug(String str) {
+        Logger log = Logger.getLogger(LocalDataControllerImpl.class.getName());
+      
         if (debugModeValue) {
-            System.out.println(str);
+            log.info(str);
         }
     }
 

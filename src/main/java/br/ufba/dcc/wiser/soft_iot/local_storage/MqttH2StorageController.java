@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -350,8 +351,10 @@ public class MqttH2StorageController implements MqttCallback {
   }
 
   private void printlnDebug(String str) {
+    Logger log = Logger.getLogger(MqttH2StorageController.class.getName());
+    
     if (debugModeValue) {
-      System.out.println(str);
+      log.info(str);
     }
   }
 

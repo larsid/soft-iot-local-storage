@@ -1,7 +1,7 @@
 package br.uefs.larsid.extended.local_storage.listener;
 
 import org.osgi.framework.ServiceReference;
-
+import java.util.logging.Logger;
 import br.ufba.dcc.wiser.soft_iot.local_storage.MqttH2StorageController;
 import br.ufba.dcc.wiser.soft_iot.local_storage.MqttPublisherController;
 
@@ -25,8 +25,10 @@ public class MappingDevicesListener {
     }
 
     private void printlnDebug(String str) {
+        Logger log = Logger.getLogger(MappingDevicesListener.class.getName());
+        
         if (this.debugModeValue) {
-            System.out.println(str);
+            log.info(str);
         }
     }
 
