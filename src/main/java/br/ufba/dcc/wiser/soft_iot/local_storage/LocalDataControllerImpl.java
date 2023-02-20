@@ -21,6 +21,7 @@ public class LocalDataControllerImpl implements LocalDataController {
 
     private DataSource dataSource;
     private boolean debugModeValue;
+    private static final Logger logger = Logger.getLogger(LocalDataControllerImpl.class.getName());
 
     public void init() {
         Connection dbConnection;
@@ -323,10 +324,8 @@ public class LocalDataControllerImpl implements LocalDataController {
     }
 
     private void printlnDebug(String str) {
-        Logger log = Logger.getLogger(LocalDataControllerImpl.class.getName());
-      
         if (debugModeValue) {
-            log.info(str);
+            logger.info(str);
         }
     }
 

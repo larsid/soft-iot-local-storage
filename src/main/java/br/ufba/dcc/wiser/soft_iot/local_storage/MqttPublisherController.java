@@ -26,6 +26,7 @@ public class MqttPublisherController {
   private MqttClient publisher;
   private Controller fotDevices;
   private boolean debugModeValue;
+  private static final Logger logger = Logger.getLogger(MqttPublisherController.class.getName());
 
   public MqttPublisherController() {}
 
@@ -110,10 +111,8 @@ public class MqttPublisherController {
   }
 
   private void printlnDebug(String str) {
-    Logger log = Logger.getLogger(MqttPublisherController.class.getName());
-    
     if (debugModeValue) {
-      log.info(str);
+      logger.info(str);
     }
   }
 

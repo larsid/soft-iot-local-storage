@@ -14,6 +14,7 @@ public class MappingDevicesListener {
     private boolean debugModeValue;
     private MqttPublisherController mqttPublisher;
     private MqttH2StorageController mqttH2Storage;
+    private static final Logger logger = Logger.getLogger(MappingDevicesListener.class.getName());
 
     public void onBind(ServiceReference ref) {
         this.mqttPublisher.sendFlowRequestBySensorDevice();
@@ -25,10 +26,8 @@ public class MappingDevicesListener {
     }
 
     private void printlnDebug(String str) {
-        Logger log = Logger.getLogger(MappingDevicesListener.class.getName());
-        
         if (this.debugModeValue) {
-            log.info(str);
+            logger.info(str);
         }
     }
 

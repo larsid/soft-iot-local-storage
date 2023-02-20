@@ -41,6 +41,7 @@ public class MqttH2StorageController implements MqttCallback {
   private int defaultCollectionTime;
   private int defaultPublishingTime;
   private boolean debugModeValue;
+  private static final Logger logger = Logger.getLogger(MqttH2StorageController.class.getName());
 
   public void init() {
     MqttConnectOptions connOpt = new MqttConnectOptions();
@@ -351,10 +352,8 @@ public class MqttH2StorageController implements MqttCallback {
   }
 
   private void printlnDebug(String str) {
-    Logger log = Logger.getLogger(MqttH2StorageController.class.getName());
-    
     if (debugModeValue) {
-      log.info(str);
+      logger.info(str);
     }
   }
 
