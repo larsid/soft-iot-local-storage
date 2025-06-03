@@ -40,8 +40,10 @@ public class MqttH2StorageController implements MqttCallback {
   private int defaultCollectionTime;
   private int defaultPublishingTime;
   private boolean debugModeValue;
+  private boolean shouldStoreDeviceData;
 
   public void init() {
+    this.shouldStoreDeviceData = this.getNeedsStorageDeviceData();
     MqttConnectOptions connOpt = new MqttConnectOptions();
 
     try {
@@ -277,6 +279,9 @@ public class MqttH2StorageController implements MqttCallback {
   }
 
   private void storeSensorData(List<SensorData> listSensorData, Device device) {
+    if(!this.shouldStoreDeviceData){
+        return;
+    }
     try {
       Connection dbConn = this.dataSource.getConnection();
       Statement stmt = dbConn.createStatement();
@@ -414,4 +419,9 @@ public class MqttH2StorageController implements MqttCallback {
   public void setDebugModeValue(boolean debugModeValue) {
     this.debugModeValue = debugModeValue;
   }
+  
+    private boolean getNeedsStorageDeviceData() {
+      String value = System.getenv("STORAGE_DEVICE_DATA");
+      return value == null ? false : Boolean.getBoolean(value);
+    }
 }
